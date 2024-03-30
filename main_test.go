@@ -1,12 +1,13 @@
 package main
 
 import (
+	"context"
+	"fmt"
+	"github.com/akyriako/cert-manager-webhook-opentelekomcloud/pkg/dns"
 	"os"
 	"testing"
 
 	acmetest "github.com/cert-manager/cert-manager/test/acme"
-
-	"github.com/cert-manager/webhook-example/example"
 )
 
 var (
@@ -26,16 +27,19 @@ func TestRunsSuite(t *testing.T) {
 	//	acmetest.SetManifestPath("testdata/my-custom-solver"),
 	//	acmetest.SetBinariesPath("_test/kubebuilder/bin"),
 	//)
-	solver := example.New("59351")
-	fixture := acmetest.NewFixture(solver,
-		acmetest.SetResolvedZone("example.com."),
-		acmetest.SetManifestPath("testdata/my-custom-solver"),
-		acmetest.SetDNSServer("127.0.0.1:59351"),
+
+	dnsIpAddress := dns.GetOpenTelekomCloudDnsServerAddress()
+	fmt.Printf(dnsIpAddress)
+	fixture := acmetest.NewFixture(dns.NewOpenTelekomCloudDnsProviderSolver(context.Background()),
+		acmetest.SetResolvedZone(zone),
+		acmetest.SetManifestPath("testdata/opentelekomcloud"),
+		acmetest.SetDNSServer(fmt.Sprintf("%s:53", dnsIpAddress)),
 		acmetest.SetUseAuthoritative(false),
+		acmetest.SetAllowAmbientCredentials(false),
 	)
 	//need to uncomment and  RunConformance delete runBasic and runExtended once https://github.com/cert-manager/cert-manager/pull/4835 is merged
-	//fixture.RunConformance(t)
-	fixture.RunBasic(t)
-	fixture.RunExtended(t)
+	fixture.RunConformance(t)
+	//fixture.RunBasic(t)
+	//fixture.RunExtended(t)
 
 }
