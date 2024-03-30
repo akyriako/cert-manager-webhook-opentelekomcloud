@@ -81,6 +81,8 @@ func (s *OpenTelekomCloudDnsProviderSolver) CleanUp(ch *v1alpha1.ChallengeReques
 // The stopCh can be used to handle early termination of the webhook, in cases
 // where a SIGTERM or similar signal is sent to the webhook process.
 func (s *OpenTelekomCloudDnsProviderSolver) Initialize(kubeClientConfig *rest.Config, stopCh <-chan struct{}) error {
+	slog.Debug(fmt.Sprintf("initiazing cert-manager-webhook-%s", solverReferenceName))
+
 	select {
 	case <-s.context.Done():
 		return s.context.Err()

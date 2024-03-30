@@ -12,7 +12,7 @@ import (
 )
 
 type config struct {
-	GroupName string `env:"GROUP_NAME,required"`
+	GroupName string `env:"GROUP_NAME" envDefault:"acme.opentelekomcloud.com"`
 	Debug     bool   `env:"OS_DEBUG" envDefault:"false"`
 }
 

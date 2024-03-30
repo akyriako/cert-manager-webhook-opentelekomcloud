@@ -25,7 +25,10 @@ var (
 
 func GetOpenTelekomCloudDnsServerAddress() string {
 	idx := rand.Intn(2)
-	return OpenTelekomCloudDnsServers[idx]
+	ip := OpenTelekomCloudDnsServers[idx]
+
+	slog.Debug(fmt.Sprintf("dns server %s will be used", ip))
+	return ip
 }
 
 func (s *OpenTelekomCloudDnsProviderSolver) SetOpenTelekomCloudDnsServiceClient(ch *v1alpha1.ChallengeRequest) error {
@@ -69,6 +72,8 @@ func (s *OpenTelekomCloudDnsProviderSolver) SetOpenTelekomCloudDnsServiceClient(
 		return errors.Wrap(err, "creating an opentelekomcloud dns service client failed")
 	}
 
+	slog.Debug("created an opentelekomcloud dns service client")
+
 	s.dnsClient = dnsServiceClient
 	return nil
 }
@@ -106,5 +111,6 @@ func (s *OpenTelekomCloudDnsProviderSolver) GetSecret(namespace string, secretKe
 		return "", fmt.Errorf("could not get key %s in secret %s", secretKeyRef.Key, secretKeyRef.Name)
 	}
 
+	slog.Debug(fmt.Sprintf("fetched secret: %s", secretKeyRef.Name))
 	return string(data), nil
 }
