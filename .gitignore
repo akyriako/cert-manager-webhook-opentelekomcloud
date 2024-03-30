@@ -19,5 +19,5 @@ _out
 _test
 
 apiserver.local.config/*
-/testdata/opentelekomcloud/config.json
+#/testdata/opentelekomcloud/config.json
 /.run/

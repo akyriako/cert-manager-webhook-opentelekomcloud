@@ -1,0 +1,11 @@
+{
+  "region": "eu-de",
+  "accessKeySecretRef": {
+    "name": "cert-manager-webhook-opentelekomcloud-creds",
+    "key": "accessKey"
+  },
+  "secretKeySecretRef": {
+    "name": "cert-manager-webhook-opentelekomcloud-creds",
+    "key": "secretKey"
+  }
+}

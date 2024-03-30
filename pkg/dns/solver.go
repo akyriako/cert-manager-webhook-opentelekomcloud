@@ -86,7 +86,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) Initialize(kubeClientConfig *rest.Co
 		return s.context.Err()
 	case <-stopCh:
 		return fmt.Errorf(fmt.Sprintf(
-			"initializing cert-manager webhook '%s' failed: early termination signal",
+			"initializing cert-manager-webhook-%s failed: early termination signal",
 			solverReferenceName,
 		))
 	default:
@@ -99,6 +99,6 @@ func (s *OpenTelekomCloudDnsProviderSolver) Initialize(kubeClientConfig *rest.Co
 
 	s.k8sClient = client
 
-	slog.Debug(fmt.Sprintf("initialized cert-manager webhook '%s'", solverReferenceName))
+	slog.Debug(fmt.Sprintf("initialized cert-manager-webhook-%s", solverReferenceName))
 	return nil
 }
