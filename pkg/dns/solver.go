@@ -115,7 +115,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) CleanUp(ch *v1alpha1.ChallengeReques
 		return errors.Wrap(err, "clean up failed")
 	}
 
-	if len(recordSets) != 1 {
+	if len(recordSets) == 0 {
 		slog.Debug(
 			fmt.Sprintf("clean up skipped: found 0 recordsets matching %s in zone %s",
 				ch.ResolvedFQDN,
