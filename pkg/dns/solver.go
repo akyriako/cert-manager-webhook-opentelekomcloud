@@ -61,34 +61,31 @@ func (s *OpenTelekomCloudDnsProviderSolver) Present(ch *v1alpha1.ChallengeReques
 		return errors.Wrap(err, "present failed")
 	}
 
-	recordSets, err := s.GetTxtRecordsSetsByZone(ch, zone)
+	recordSets, err := s.GetTxtRecordSetsByZone(ch, zone)
 	if err != nil {
 		return errors.Wrap(err, "present failed")
 	}
 
 	if len(recordSets) > 0 {
-		//for _, record := range recordSets[0].Records {
-		//	if record == GetQuotedString(ch.Key) {
-		slog.Debug(
-			fmt.Sprintf("present skipped: found %v records in recordset matching %s in zone %s",
-				len(recordSets[0].Records),
-				ch.ResolvedFQDN,
-				ch.ResolvedZone),
-		)
+		var updateOpts recordsets.UpdateOpts
+		updateOpts.Records = []string{GetQuotedString(ch.Key)}
+
+		_, err = recordsets.Update(s.dnsClient, zone.ID, recordSets[0].ID, updateOpts).Extract()
+		if err != nil {
+			return errors.Wrap(err, "present failed")
+		}
 
 		return nil
-		//}
-		//}
 	}
 
-	var opts recordsets.CreateOpts
-	opts.Name = ch.ResolvedFQDN
-	opts.Type = "TXT"
-	opts.Records = []string{GetQuotedString(ch.Key)}
+	var createOpts recordsets.CreateOpts
+	createOpts.Name = ch.ResolvedFQDN
+	createOpts.Type = "TXT"
+	createOpts.Records = []string{GetQuotedString(ch.Key)}
 
-	_, err = recordsets.Create(s.dnsClient, zone.ID, opts).Extract()
+	_, err = recordsets.Create(s.dnsClient, zone.ID, createOpts).Extract()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "present failed")
 	}
 
 	slog.Debug("completed challenge request 'present'", "dnsName", ch.DNSName, "zone", ch.ResolvedZone, "fqdn", ch.ResolvedFQDN)
@@ -113,7 +110,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) CleanUp(ch *v1alpha1.ChallengeReques
 		return errors.Wrap(err, "clean up failed")
 	}
 
-	recordSets, err := s.GetTxtRecordsSetsByZone(ch, zone)
+	recordSets, err := s.GetTxtRecordSetsByZone(ch, zone)
 	if err != nil {
 		return errors.Wrap(err, "clean up failed")
 	}

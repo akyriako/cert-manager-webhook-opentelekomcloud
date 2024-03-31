@@ -42,8 +42,10 @@ func (s *OpenTelekomCloudDnsProviderSolver) SetOpenTelekomCloudDnsServiceClient(
 
 	config, err := loadConfig(ch.Config)
 	if err != nil {
-		return errors.Wrap(err, "failed to load challenge-request config")
+		return errors.Wrap(err, "loading challenge-request config failed")
 	}
+
+	slog.Debug("loaded challenge-request config")
 
 	inCluster := false
 	aksk := &OpenTelekomCloudAkSk{}
@@ -147,7 +149,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) GetResolvedZone(ch *v1alpha1.Challen
 	return &allZones[0], nil
 }
 
-func (s *OpenTelekomCloudDnsProviderSolver) GetTxtRecordsSetsByZone(ch *v1alpha1.ChallengeRequest, zone *zones.Zone) ([]recordsets.RecordSet, error) {
+func (s *OpenTelekomCloudDnsProviderSolver) GetTxtRecordSetsByZone(ch *v1alpha1.ChallengeRequest, zone *zones.Zone) ([]recordsets.RecordSet, error) {
 	action := strings.ToLower(string(ch.Action))
 
 	recordsetsListOpts := recordsets.ListOpts{
