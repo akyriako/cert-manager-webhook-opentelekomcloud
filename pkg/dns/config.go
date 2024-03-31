@@ -18,9 +18,11 @@ import (
 // If you do *not* require per-issuer or per-certificate configuration to be
 // provided to your webhook, you can skip decoding altogether in favour of
 // using CLI flags or similar to provide configuration.
-// You should not include sensitive information here. If credentials need to
-// be used by your provider here, you should reference a Kubernetes Secret
-// resource and fetch these credentials using a Kubernetes clientset.
+//
+// **You should not include sensitive information here**.
+//
+// If credentials need to be used by your provider here, you should reference a
+// Kubernetes Secret resource and fetch these credentials using a Kubernetes clientset.
 type OpenTelekomCloudDnsProviderConfig struct {
 	// These fields will be set by users in the
 	// `issuer.spec.acme.dns01.providers.webhook.config` field.
