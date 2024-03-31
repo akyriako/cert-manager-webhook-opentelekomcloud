@@ -21,6 +21,7 @@ const (
 	primaryDnsIpAddress   string = "100.125.4.25"
 	secondaryDnsIpAddress string = "100.125.129.199"
 	authUrl               string = "https://iam.%s.otc.t-systems.com:443/v3"
+	txtRecordSetType      string = "TXT"
 )
 
 var (
@@ -154,7 +155,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) getTxtRecordSetsByZone(ch *v1alpha1.
 
 	recordsetsListOpts := recordsets.ListOpts{
 		Name: ch.ResolvedFQDN,
-		Type: "TXT",
+		Type: txtRecordSetType,
 		Data: getQuotedString(ch.Key),
 	}
 

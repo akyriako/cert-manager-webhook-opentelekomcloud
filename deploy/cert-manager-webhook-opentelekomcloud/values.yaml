@@ -6,16 +6,19 @@
 # solve the DNS01 challenge.
 # This group name should be **unique**, hence using your own company's domain
 # here is recommended.
-groupName: acme.mycompany.com
+groupName: acme.opentelekomcloud.com
+akskSecretRef: cert-manager-webhook-opentelekomcloud-creds
 
 certManager:
   namespace: cert-manager
   serviceAccountName: cert-manager
 
 image:
-  repository: mycompany/webhook-image
-  tag: latest
+  repository: akyriako78/cert-manager-webhook-opentelekomcloud
+  tag: 56c52f3
   pullPolicy: IfNotPresent
+
+replicaCount: 1
 
 nameOverride: ""
 fullnameOverride: ""
@@ -41,3 +44,7 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+opentelekomcloud:
+  accessKey: ""
+  secretKey: ""

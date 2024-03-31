@@ -2,14 +2,15 @@ GO ?= $(shell which go)
 OS ?= $(shell $(GO) env GOOS)
 ARCH ?= $(shell $(GO) env GOARCH)
 
-IMAGE_NAME := "webhook"
-IMAGE_TAG := "latest"
+IMAGE_NAME := "akyriako78/cert-manager-webhook-opentelekomcloud"
+IMAGE_TAG  ?= $(shell git describe --tags --always)
 
 OUT := $(shell pwd)/_out
 
 KUBEBUILDER_VERSION=1.28.0
 
-HELM_FILES := $(shell find deploy/example-webhook)
+HELM_FILES := $(shell find deploy/cert-manager-webhook-opentelekomcloud)
+RELEASE_NAME := "test"
 
 test: _test/kubebuilder-$(KUBEBUILDER_VERSION)-$(OS)-$(ARCH)/etcd _test/kubebuilder-$(KUBEBUILDER_VERSION)-$(OS)-$(ARCH)/kube-apiserver _test/kubebuilder-$(KUBEBUILDER_VERSION)-$(OS)-$(ARCH)/kubectl
 	TEST_ASSET_ETCD=_test/kubebuilder-$(KUBEBUILDER_VERSION)-$(OS)-$(ARCH)/etcd \
@@ -31,15 +32,24 @@ clean:
 build:
 	docker build -t "$(IMAGE_NAME):$(IMAGE_TAG)" .
 
+.PHONY: docker-build
+docker-build:
+	docker build -t "$(IMAGE_NAME):$(IMAGE_TAG)" .
+
+docker-push:
+	docker push "$(IMAGE_NAME):$(IMAGE_TAG)"
+
 .PHONY: rendered-manifest.yaml
 rendered-manifest.yaml: $(OUT)/rendered-manifest.yaml
 
 $(OUT)/rendered-manifest.yaml: $(HELM_FILES) | $(OUT)
 	helm template \
-	    --name example-webhook \
-            --set image.repository=$(IMAGE_NAME) \
-            --set image.tag=$(IMAGE_TAG) \
-            deploy/example-webhook > $@
+	    $(RELEASE_NAME) \
+        --set image.repository=$(IMAGE_NAME) \
+        --set image.tag=$(IMAGE_TAG) \
+        --set opentelekomcloud.accessKey="<OS_ACCESS_KEY>" \
+        --set opentelekomcloud.secretKey="<OS_SECRET_KEY>" \
+        deploy/cert-manager-webhook-opentelekomcloud > $@
 
 _test $(OUT) _test/kubebuilder-$(KUBEBUILDER_VERSION)-$(OS)-$(ARCH):
 	mkdir -p $@

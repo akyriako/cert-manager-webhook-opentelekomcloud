@@ -80,7 +80,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) Present(ch *v1alpha1.ChallengeReques
 
 	var createOpts recordsets.CreateOpts
 	createOpts.Name = ch.ResolvedFQDN
-	createOpts.Type = "TXT"
+	createOpts.Type = txtRecordSetType
 	createOpts.Records = []string{getQuotedString(ch.Key)}
 
 	_, err = recordsets.Create(s.dnsClient, zone.ID, createOpts).Extract()
