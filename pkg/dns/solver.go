@@ -51,24 +51,24 @@ func (s *OpenTelekomCloudDnsProviderSolver) Name() string {
 // solver has correctly configured the DNS provider.
 func (s *OpenTelekomCloudDnsProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 	slog.Debug("starting challenge request 'present'", "dnsName", ch.DNSName, "zone", ch.ResolvedZone, "fqdn", ch.ResolvedFQDN)
-	err := s.SetOpenTelekomCloudDnsServiceClient(ch)
+	err := s.setOpenTelekomCloudDnsServiceClient(ch)
 	if err != nil {
 		return errors.Wrap(err, "present failed")
 	}
 
-	zone, err := s.GetResolvedZone(ch)
+	zone, err := s.getResolvedZone(ch)
 	if err != nil {
 		return errors.Wrap(err, "present failed")
 	}
 
-	recordSets, err := s.GetTxtRecordSetsByZone(ch, zone)
+	recordSets, err := s.getTxtRecordSetsByZone(ch, zone)
 	if err != nil {
 		return errors.Wrap(err, "present failed")
 	}
 
 	if len(recordSets) > 0 {
 		var updateOpts recordsets.UpdateOpts
-		updateOpts.Records = []string{GetQuotedString(ch.Key)}
+		updateOpts.Records = []string{getQuotedString(ch.Key)}
 
 		_, err = recordsets.Update(s.dnsClient, zone.ID, recordSets[0].ID, updateOpts).Extract()
 		if err != nil {
@@ -81,7 +81,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) Present(ch *v1alpha1.ChallengeReques
 	var createOpts recordsets.CreateOpts
 	createOpts.Name = ch.ResolvedFQDN
 	createOpts.Type = "TXT"
-	createOpts.Records = []string{GetQuotedString(ch.Key)}
+	createOpts.Records = []string{getQuotedString(ch.Key)}
 
 	_, err = recordsets.Create(s.dnsClient, zone.ID, createOpts).Extract()
 	if err != nil {
@@ -100,17 +100,17 @@ func (s *OpenTelekomCloudDnsProviderSolver) Present(ch *v1alpha1.ChallengeReques
 // concurrently.
 func (s *OpenTelekomCloudDnsProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 	slog.Debug("starting challenge request 'cleanup' ", "zone", ch.ResolvedZone, "fqdn", ch.ResolvedFQDN)
-	err := s.SetOpenTelekomCloudDnsServiceClient(ch)
+	err := s.setOpenTelekomCloudDnsServiceClient(ch)
 	if err != nil {
 		return errors.Wrap(err, "clean up failed")
 	}
 
-	zone, err := s.GetResolvedZone(ch)
+	zone, err := s.getResolvedZone(ch)
 	if err != nil {
 		return errors.Wrap(err, "clean up failed")
 	}
 
-	recordSets, err := s.GetTxtRecordSetsByZone(ch, zone)
+	recordSets, err := s.getTxtRecordSetsByZone(ch, zone)
 	if err != nil {
 		return errors.Wrap(err, "clean up failed")
 	}

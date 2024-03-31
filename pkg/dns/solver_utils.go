@@ -35,7 +35,7 @@ func GetOpenTelekomCloudDnsServerAddress() string {
 	return dnsServerAddress
 }
 
-func (s *OpenTelekomCloudDnsProviderSolver) SetOpenTelekomCloudDnsServiceClient(ch *v1alpha1.ChallengeRequest) error {
+func (s *OpenTelekomCloudDnsProviderSolver) setOpenTelekomCloudDnsServiceClient(ch *v1alpha1.ChallengeRequest) error {
 	if s.dnsClient != nil {
 		return nil
 	}
@@ -56,7 +56,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) SetOpenTelekomCloudDnsServiceClient(
 	}
 
 	if inCluster {
-		aksk, err = s.GetOpenTelekomCloudAkSk(config, ch)
+		aksk, err = s.getOpenTelekomCloudAkSk(config, ch)
 		if err != nil {
 			return errors.Wrap(err, "failed to load access and secret keys")
 		}
@@ -88,16 +88,16 @@ func (s *OpenTelekomCloudDnsProviderSolver) SetOpenTelekomCloudDnsServiceClient(
 	return nil
 }
 
-func (s *OpenTelekomCloudDnsProviderSolver) GetOpenTelekomCloudAkSk(
+func (s *OpenTelekomCloudDnsProviderSolver) getOpenTelekomCloudAkSk(
 	config OpenTelekomCloudDnsProviderConfig,
 	ch *v1alpha1.ChallengeRequest,
 ) (*OpenTelekomCloudAkSk, error) {
-	ak, err := s.GetSecret(ch.ResourceNamespace, config.AccessKeySecretRef)
+	ak, err := s.getSecret(ch.ResourceNamespace, config.AccessKeySecretRef)
 	if err != nil {
 		return nil, err
 	}
 
-	sk, err := s.GetSecret(ch.ResourceNamespace, config.SecretKeySecretRef)
+	sk, err := s.getSecret(ch.ResourceNamespace, config.SecretKeySecretRef)
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +110,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) GetOpenTelekomCloudAkSk(
 	return &aksk, nil
 }
 
-func (s *OpenTelekomCloudDnsProviderSolver) GetSecret(namespace string, secretKeyRef *corev1.SecretKeySelector) (string, error) {
+func (s *OpenTelekomCloudDnsProviderSolver) getSecret(namespace string, secretKeyRef *corev1.SecretKeySelector) (string, error) {
 	secret, err := s.k8sClient.CoreV1().Secrets(namespace).Get(s.context, secretKeyRef.Name, metav1.GetOptions{})
 	if err != nil {
 		return "", fmt.Errorf("could not fetch secret %s: %w", secretKeyRef.Name, err)
@@ -125,7 +125,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) GetSecret(namespace string, secretKe
 	return string(data), nil
 }
 
-func (s *OpenTelekomCloudDnsProviderSolver) GetResolvedZone(ch *v1alpha1.ChallengeRequest) (*zones.Zone, error) {
+func (s *OpenTelekomCloudDnsProviderSolver) getResolvedZone(ch *v1alpha1.ChallengeRequest) (*zones.Zone, error) {
 	action := strings.ToLower(string(ch.Action))
 
 	listOpts := zones.ListOpts{
@@ -149,13 +149,13 @@ func (s *OpenTelekomCloudDnsProviderSolver) GetResolvedZone(ch *v1alpha1.Challen
 	return &allZones[0], nil
 }
 
-func (s *OpenTelekomCloudDnsProviderSolver) GetTxtRecordSetsByZone(ch *v1alpha1.ChallengeRequest, zone *zones.Zone) ([]recordsets.RecordSet, error) {
+func (s *OpenTelekomCloudDnsProviderSolver) getTxtRecordSetsByZone(ch *v1alpha1.ChallengeRequest, zone *zones.Zone) ([]recordsets.RecordSet, error) {
 	action := strings.ToLower(string(ch.Action))
 
 	recordsetsListOpts := recordsets.ListOpts{
 		Name: ch.ResolvedFQDN,
 		Type: "TXT",
-		Data: GetQuotedString(ch.Key),
+		Data: getQuotedString(ch.Key),
 	}
 
 	allRecordPages, err := recordsets.ListByZone(s.dnsClient, zone.ID, recordsetsListOpts).AllPages()
@@ -171,7 +171,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) GetTxtRecordSetsByZone(ch *v1alpha1.
 	return allRecordSets, nil
 }
 
-func GetQuotedString(s string) string {
+func getQuotedString(s string) string {
 	if strings.HasPrefix(s, "\"") && strings.HasSuffix(s, "\"") {
 		return s
 	} else {
