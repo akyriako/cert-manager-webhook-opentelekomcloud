@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/akyriako/cert-manager-webhook-opentelekomcloud/pkg/dns"
 	"os"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -27,14 +26,14 @@ func TestRunsSuite(t *testing.T) {
 	// snippet of valid configuration that should be included on the
 	// ChallengeRequest passed as part of the test cases.
 
-	dnsIpAddress := dns.GetOpenTelekomCloudDnsServerAddress()
+	//dnsIpAddress := dns.GetOpenTelekomCloudDnsServerAddress()
 
 	fixture := acmetest.NewFixture(dns.NewOpenTelekomCloudDnsProviderSolver(context.Background()),
 		acmetest.SetResolvedZone(zone),
 		acmetest.SetAllowAmbientCredentials(false),
 		acmetest.SetManifestPath("testdata/opentelekomcloud"),
-		acmetest.SetDNSServer(fmt.Sprintf("%s:53", dnsIpAddress)),
-		acmetest.SetDNSServer("8.8.8.8:53"),
+		//acmetest.SetDNSServer(fmt.Sprintf("%s:53", dnsIpAddress)),
+		//acmetest.SetDNSServer("8.8.8.8:53"),
 
 		// Open Telekom Cloud DNS does not permit multiple TXT Records with the same name
 		// in the same Record Set. The 'Present' challenge request in solver.go is updating
