@@ -15,6 +15,9 @@ var (
 	zone = os.Getenv("TEST_ZONE_NAME")
 )
 
+// Sets the controller-runtime logger otherwise test suite is raising a warning as
+// it is not yet refactored to support newest structured logging logger (slog) that
+// is introduced in Golang 1.21
 func init() {
 	opts := zap.Options{}
 	logger := zap.New(zap.UseFlagOptions(&opts))
