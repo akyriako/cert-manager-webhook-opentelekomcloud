@@ -18,6 +18,7 @@ cert-manager-webhook-example
 _out
 _test
 
+apiserver.local.config
 apiserver.local.config/*
 #/testdata/opentelekomcloud/config.json
 /.run/

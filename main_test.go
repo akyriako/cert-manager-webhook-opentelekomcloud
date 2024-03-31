@@ -34,8 +34,10 @@ func TestRunsSuite(t *testing.T) {
 		acmetest.SetAllowAmbientCredentials(false),
 		acmetest.SetManifestPath("testdata/opentelekomcloud"),
 		acmetest.SetDNSServer(fmt.Sprintf("%s:53", dnsIpAddress)),
+		acmetest.SetDNSServer(fmt.Sprintf("8.8.8.8:53")),
 		acmetest.SetStrict(true),
 	)
 
-	fixture.RunConformance(t)
+	fixture.RunBasic(t)
+	fixture.RunExtended(t)
 }

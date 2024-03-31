@@ -28,10 +28,10 @@ var (
 )
 
 func GetOpenTelekomCloudDnsServerAddress() string {
-	idx := rand.Intn(2)
+	idx := rand.Intn(len(OpenTelekomCloudDnsServers))
 	dnsServerAddress := OpenTelekomCloudDnsServers[idx]
 
-	slog.Debug(fmt.Sprintf("dns server at %s will be used", dnsServerAddress))
+	slog.Debug(fmt.Sprintf("opentelekomcloud nameserver %s will be used", dnsServerAddress))
 	return dnsServerAddress
 }
 
@@ -157,7 +157,6 @@ func (s *OpenTelekomCloudDnsProviderSolver) GetTxtRecordsSetsByZone(ch *v1alpha1
 	}
 
 	allRecordPages, err := recordsets.ListByZone(s.dnsClient, zone.ID, recordsetsListOpts).AllPages()
-
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf("%s failed", action))
 	}

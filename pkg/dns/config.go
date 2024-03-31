@@ -22,8 +22,6 @@ import (
 // be used by your provider here, you should reference a Kubernetes Secret
 // resource and fetch these credentials using a Kubernetes clientset.
 type OpenTelekomCloudDnsProviderConfig struct {
-	// Change the two fields below according to the format of the configuration
-	// to be decoded.
 	// These fields will be set by users in the
 	// `issuer.spec.acme.dns01.providers.webhook.config` field.
 	Region             string                    `json:"region,required"`

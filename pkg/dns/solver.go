@@ -50,7 +50,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) Name() string {
 // cert-manager itself will later perform a self check to ensure that the
 // solver has correctly configured the DNS provider.
 func (s *OpenTelekomCloudDnsProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
-	slog.Info("calling challenge request 'present'", "dnsName", ch.DNSName, "type", ch.Type, "zone", ch.ResolvedZone, "fqdn", ch.ResolvedFQDN)
+	slog.Debug("starting challenge request 'present'", "dnsName", ch.DNSName, "zone", ch.ResolvedZone, "fqdn", ch.ResolvedFQDN)
 	err := s.SetOpenTelekomCloudDnsServiceClient(ch)
 	if err != nil {
 		return errors.Wrap(err, "present failed")
@@ -59,6 +59,26 @@ func (s *OpenTelekomCloudDnsProviderSolver) Present(ch *v1alpha1.ChallengeReques
 	zone, err := s.GetResolvedZone(ch)
 	if err != nil {
 		return errors.Wrap(err, "present failed")
+	}
+
+	recordSets, err := s.GetTxtRecordsSetsByZone(ch, zone)
+	if err != nil {
+		return errors.Wrap(err, "present failed")
+	}
+
+	if len(recordSets) > 0 {
+		//for _, record := range recordSets[0].Records {
+		//	if record == GetQuotedString(ch.Key) {
+		slog.Debug(
+			fmt.Sprintf("present skipped: found %v records in recordset matching %s in zone %s",
+				len(recordSets[0].Records),
+				ch.ResolvedFQDN,
+				ch.ResolvedZone),
+		)
+
+		return nil
+		//}
+		//}
 	}
 
 	var opts recordsets.CreateOpts
@@ -71,6 +91,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) Present(ch *v1alpha1.ChallengeReques
 		return err
 	}
 
+	slog.Debug("completed challenge request 'present'", "dnsName", ch.DNSName, "zone", ch.ResolvedZone, "fqdn", ch.ResolvedFQDN)
 	return nil
 }
 
@@ -81,7 +102,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) Present(ch *v1alpha1.ChallengeReques
 // This is in order to facilitate multiple DNS validations for the same domain
 // concurrently.
 func (s *OpenTelekomCloudDnsProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
-	slog.Info("calling challenge request 'cleanup' ", "zone", ch.ResolvedZone, "fqdn", ch.ResolvedFQDN)
+	slog.Debug("starting challenge request 'cleanup' ", "zone", ch.ResolvedZone, "fqdn", ch.ResolvedFQDN)
 	err := s.SetOpenTelekomCloudDnsServiceClient(ch)
 	if err != nil {
 		return errors.Wrap(err, "clean up failed")
@@ -98,12 +119,13 @@ func (s *OpenTelekomCloudDnsProviderSolver) CleanUp(ch *v1alpha1.ChallengeReques
 	}
 
 	if len(recordSets) != 1 {
-		return fmt.Errorf(
-			"clean up failed: found %v while expecting 1 recordset matching %s in zone %s",
-			len(recordSets),
-			ch.ResolvedFQDN,
-			ch.ResolvedZone,
+		slog.Debug(
+			fmt.Sprintf("clean up skipped: found 0 recordsets matching %s in zone %s",
+				ch.ResolvedFQDN,
+				ch.ResolvedZone),
 		)
+
+		return nil
 	}
 
 	err = recordsets.Delete(s.dnsClient, zone.ID, recordSets[0].ID).ExtractErr()
@@ -111,6 +133,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) CleanUp(ch *v1alpha1.ChallengeReques
 		return errors.Wrap(err, "clean up failed")
 	}
 
+	slog.Debug("completed challenge request 'cleanup' ", "zone", ch.ResolvedZone, "fqdn", ch.ResolvedFQDN)
 	return nil
 }
 
