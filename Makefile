@@ -49,6 +49,7 @@ $(OUT)/rendered-manifest.yaml: $(HELM_FILES) | $(OUT)
         --set image.tag=$(IMAGE_TAG) \
         --set opentelekomcloud.accessKey="<OS_ACCESS_KEY>" \
         --set opentelekomcloud.secretKey="<OS_SECRET_KEY>" \
+        --namespace cert-manager \
         deploy/cert-manager-webhook-opentelekomcloud > $@
 
 _test $(OUT) _test/kubebuilder-$(KUBEBUILDER_VERSION)-$(OS)-$(ARCH):
