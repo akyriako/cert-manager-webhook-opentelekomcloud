@@ -35,8 +35,6 @@ func TestRunsSuite(t *testing.T) {
 		acmetest.SetResolvedZone(zone),
 		acmetest.SetAllowAmbientCredentials(false),
 		acmetest.SetManifestPath("testdata/opentelekomcloud"),
-		//acmetest.SetDNSServer(fmt.Sprintf("%s:53", dnsIpAddress)),
-		//acmetest.SetDNSServer("8.8.8.8:53"),
 
 		// Open Telekom Cloud DNS does not permit multiple TXT Records with the same name
 		// in the same Record Set. The 'Present' challenge request in solver.go is updating
