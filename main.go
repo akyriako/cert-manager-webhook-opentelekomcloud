@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"github.com/akyriako/cert-manager-webhook-opentelekomcloud/pkg/dns"
 	"github.com/caarlos0/env/v10"
+	"github.com/cert-manager/cert-manager/pkg/acme/webhook/cmd"
 	"log/slog"
 	"os"
-
-	"github.com/cert-manager/cert-manager/pkg/acme/webhook/cmd"
 )
 
 type config struct {

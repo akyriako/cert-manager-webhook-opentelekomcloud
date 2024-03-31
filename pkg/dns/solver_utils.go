@@ -6,11 +6,15 @@ import (
 	"github.com/cert-manager/cert-manager/pkg/acme/webhook/apis/acme/v1alpha1"
 	golangsdk "github.com/opentelekomcloud/gophertelekomcloud"
 	"github.com/opentelekomcloud/gophertelekomcloud/openstack"
+	"github.com/opentelekomcloud/gophertelekomcloud/openstack/dns/v2/recordsets"
+	"github.com/opentelekomcloud/gophertelekomcloud/openstack/dns/v2/zones"
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"log/slog"
 	"math/rand"
+	"strconv"
+	"strings"
 )
 
 const (
@@ -25,20 +29,24 @@ var (
 
 func GetOpenTelekomCloudDnsServerAddress() string {
 	idx := rand.Intn(2)
-	ip := OpenTelekomCloudDnsServers[idx]
+	dnsServerAddress := OpenTelekomCloudDnsServers[idx]
 
-	slog.Debug(fmt.Sprintf("dns server %s will be used", ip))
-	return ip
+	slog.Debug(fmt.Sprintf("dns server at %s will be used", dnsServerAddress))
+	return dnsServerAddress
 }
 
 func (s *OpenTelekomCloudDnsProviderSolver) SetOpenTelekomCloudDnsServiceClient(ch *v1alpha1.ChallengeRequest) error {
+	if s.dnsClient != nil {
+		return nil
+	}
+
 	config, err := loadConfig(ch.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to load challenge-request config")
 	}
 
 	inCluster := false
-	var aksk *OpenTelekomCloudAkSk
+	aksk := &OpenTelekomCloudAkSk{}
 	err = env.Parse(aksk)
 	if err != nil {
 		slog.Debug(fmt.Sprintf("no ak/sk pair found in env variables, falling back to kubernetes secrets"))
@@ -113,4 +121,59 @@ func (s *OpenTelekomCloudDnsProviderSolver) GetSecret(namespace string, secretKe
 
 	slog.Debug(fmt.Sprintf("fetched secret: %s", secretKeyRef.Name))
 	return string(data), nil
+}
+
+func (s *OpenTelekomCloudDnsProviderSolver) GetResolvedZone(ch *v1alpha1.ChallengeRequest) (*zones.Zone, error) {
+	action := strings.ToLower(string(ch.Action))
+
+	listOpts := zones.ListOpts{
+		Name: ch.ResolvedZone,
+	}
+
+	allPages, err := zones.List(s.dnsClient, listOpts).AllPages()
+	if err != nil {
+		return nil, errors.Wrap(err, fmt.Sprintf("%s up failed", action))
+	}
+
+	allZones, err := zones.ExtractZones(allPages)
+	if err != nil {
+		return nil, errors.Wrap(err, fmt.Sprintf("%s up failed", strings.ToLower(string(ch.Action))))
+	}
+
+	if len(allZones) != 1 {
+		return nil, fmt.Errorf("%s failed: found %v while expecting 1 for zone %s", action, len(allZones), ch.ResolvedZone)
+	}
+
+	return &allZones[0], nil
+}
+
+func (s *OpenTelekomCloudDnsProviderSolver) GetTxtRecordsSetsByZone(ch *v1alpha1.ChallengeRequest, zone *zones.Zone) ([]recordsets.RecordSet, error) {
+	action := strings.ToLower(string(ch.Action))
+
+	recordsetsListOpts := recordsets.ListOpts{
+		Name: ch.ResolvedFQDN,
+		Type: "TXT",
+		Data: GetQuotedString(ch.Key),
+	}
+
+	allRecordPages, err := recordsets.ListByZone(s.dnsClient, zone.ID, recordsetsListOpts).AllPages()
+
+	if err != nil {
+		return nil, errors.Wrap(err, fmt.Sprintf("%s failed", action))
+	}
+
+	allRecordSets, err := recordsets.ExtractRecordSets(allRecordPages)
+	if err != nil {
+		return nil, errors.Wrap(err, fmt.Sprintf("%s failed", action))
+	}
+
+	return allRecordSets, nil
+}
+
+func GetQuotedString(s string) string {
+	if strings.HasPrefix(s, "\"") && strings.HasSuffix(s, "\"") {
+		return s
+	} else {
+		return strconv.Quote(s)
+	}
 }
