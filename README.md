@@ -81,6 +81,9 @@ data:
 
 ### Conformance Testing
 
+All DNS providers must run the DNS01 provider conformance testing suite, else they will have undetermined behaviour 
+when used with cert-manager.
+
 ```bash
 $ OS_DEBUG=true OS_ACCESS_KEY={AccessKeyinBase64} OS_SECRET_KEY={SecretKeyinBase64} TEST_ZONE_NAME=example.com. make test
 ```
