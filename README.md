@@ -8,9 +8,9 @@ This webhook is installed exclusively via [Helm](https://helm.sh/).
 
 > [!NOTE]
 > If you dont't have a Kubernetes cluster in place, this project
-> comes with "batteries included"; a [Dev Container](https://containers.dev) (a `.devcontainer.json` file that can be found in the repo
-> and will be discussed in a later chapter) that instructs any IDE that supports Dev Containers, to set up an isolated 
-> containerized Kubernetes environment for you along with all necessary tooling (cert-manager, Helm etc.)
+> comes with "batteries included"; a [Dev Container](https://containers.dev) (a `.devcontainer.json` file that can be 
+> found in the repo and will be discussed in a later chapter) instructs any IDE that supports Dev Containers, to set up 
+> an isolated containerized Kubernetes environment for you along with all necessary tooling (cert-manager, Helm etc.)
 
 ### Configuration 
 
@@ -147,9 +147,8 @@ Deploy the manifest above with `kubectl`.
 
 ## Development
 
-If you dont't have a Kubernetes cluster in place, this project
-comes with "batteries included"; a [Dev Container](https://containers.dev) (a `.devcontainer.json` file that can be found in the repo
-and will be discussed in a later chapter) that instructs any IDE that supports Dev Containers, to set up an isolated
+If you dont't have a Kubernetes cluster in place, this project comes with "batteries included". A [Dev Container](https://containers.dev) 
+(**.devcontainer/devcontainer.json**) will be used by any IDE that supports Dev Containers, to set up an isolated
 containerized Kubernetes environment for you along with all necessary tooling (cert-manager, Helm etc.)
 
 ### Dev Container
