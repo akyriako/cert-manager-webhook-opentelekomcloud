@@ -187,4 +187,5 @@ $ OS_DEBUG=true OS_ACCESS_KEY={AccessKeyinBase64} OS_SECRET_KEY={SecretKeyinBase
 ```
 > [!NOTE]
 > Fill in the values of `OS_ACCESS_KEY` and `OS_SECRET_KEY`. Replace `example.com.` with your own (sub)domain.
-> Make sure not to forget the trailing `.` in the `TEST_ZONE_NAME` value.
+> Make sure not to forget the trailing `.` in the `TEST_ZONE_NAME` value. You can omit any variable already defined
+> in your session's environment variables.
