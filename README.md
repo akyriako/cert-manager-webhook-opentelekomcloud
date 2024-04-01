@@ -75,6 +75,8 @@ data:
   secretKey: "<SECRET_KEY_in_Base64>"
 ```
 
+## Usage
+
 ## Development
 
 ### Dev Container
@@ -162,7 +164,7 @@ make rendered-manifest.yaml
 
 > [!NOTE]
 > Before executing the above target, you have to make sure that you have set the values of the following environment
-> variables: `OS_ACCESS_KEY` and `OS_SECRET_KEY`
+> variables: `OS_ACCESS_KEY` and `OS_SECRET_KEY`.
 
 The last one will create a yaml file that will contain all required manifests, `rendered-manifest.yaml`, in folder `_out`:
 You can then deploy them in your Kubernetes cluster using `kubectl`:
