@@ -49,15 +49,15 @@ func (s *OpenTelekomCloudDnsProviderSolver) setOpenTelekomCloudDnsServiceClient(
 	slog.Debug("loaded challenge-request config")
 
 	inCluster := false
-	aksk := &OpenTelekomCloudAkSk{}
-	err = env.Parse(aksk)
+	secret := &OpenTelekomCloudDnsProviderSecrets{}
+	err = env.Parse(secret)
 	if err != nil {
 		slog.Debug(fmt.Sprintf("no ak/sk pair found in env variables, falling back to kubernetes secrets"))
 		inCluster = true
 	}
 
 	if inCluster {
-		aksk, err = s.getOpenTelekomCloudAkSk(config, ch)
+		secret, err = s.getOpenTelekomCloudDnsProviderSecrets(config, ch)
 		if err != nil {
 			return errors.Wrap(err, "failed to load access and secret keys")
 		}
@@ -65,8 +65,8 @@ func (s *OpenTelekomCloudDnsProviderSolver) setOpenTelekomCloudDnsServiceClient(
 
 	authOpts := golangsdk.AKSKAuthOptions{
 		IdentityEndpoint: fmt.Sprintf(authUrl, config.Region),
-		AccessKey:        aksk.AccessKey,
-		SecretKey:        aksk.SecretKey,
+		AccessKey:        secret.AccessKey,
+		SecretKey:        secret.SecretKey,
 	}
 
 	endpointOpts := golangsdk.EndpointOpts{
@@ -89,10 +89,10 @@ func (s *OpenTelekomCloudDnsProviderSolver) setOpenTelekomCloudDnsServiceClient(
 	return nil
 }
 
-func (s *OpenTelekomCloudDnsProviderSolver) getOpenTelekomCloudAkSk(
+func (s *OpenTelekomCloudDnsProviderSolver) getOpenTelekomCloudDnsProviderSecrets(
 	config OpenTelekomCloudDnsProviderConfig,
 	ch *v1alpha1.ChallengeRequest,
-) (*OpenTelekomCloudAkSk, error) {
+) (*OpenTelekomCloudDnsProviderSecrets, error) {
 	ak, err := s.getSecret(ch.ResourceNamespace, config.AccessKeySecretRef)
 	if err != nil {
 		return nil, err
@@ -103,12 +103,12 @@ func (s *OpenTelekomCloudDnsProviderSolver) getOpenTelekomCloudAkSk(
 		return nil, err
 	}
 
-	aksk := OpenTelekomCloudAkSk{
+	secret := OpenTelekomCloudDnsProviderSecrets{
 		AccessKey: ak,
 		SecretKey: sk,
 	}
 
-	return &aksk, nil
+	return &secret, nil
 }
 
 func (s *OpenTelekomCloudDnsProviderSolver) getSecret(namespace string, secretKeyRef *corev1.SecretKeySelector) (string, error) {

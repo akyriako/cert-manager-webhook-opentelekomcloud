@@ -31,7 +31,7 @@ type OpenTelekomCloudDnsProviderConfig struct {
 	SecretKeySecretRef *corev1.SecretKeySelector `json:"secretKeySecretRef,omitempty"`
 }
 
-// OpenTelekomCloudAkSk is a structure that is used to load the credentials from
+// OpenTelekomCloudDnsProviderSecrets is a structure that is used to load the credentials from
 // environment variables when solving a DNS01 challenge locally as the config.json
 // refers only to Kubernetes secrets for the Open Telekom Cloud Access and Secret keys.
 //
@@ -42,7 +42,7 @@ type OpenTelekomCloudDnsProviderConfig struct {
 // specific Domain/Project. Moving the credential keys as environment variables defined
 // individually for each Solver, via a SecretRef and not directly, gives us the flexibility
 // to work with multiple tenants from the same Webhook.
-type OpenTelekomCloudAkSk struct {
+type OpenTelekomCloudDnsProviderSecrets struct {
 	AccessKey string `env:"OS_ACCESS_KEY,required"`
 	SecretKey string `env:"OS_SECRET_KEY,required"`
 }
