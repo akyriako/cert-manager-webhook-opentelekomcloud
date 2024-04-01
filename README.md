@@ -81,6 +81,45 @@ data:
 
 ### Extend
 
+#### Webhook Configuration
+
+If you need to extend the webhook configuration via environment variables, you should extend struct `config`
+which can be found in [main.go](main.go):
+
+```go
+type config struct {
+	GroupName string `env:"GROUP_NAME" envDefault:"acme.opentelekomcloud.com"`
+	Debug     bool   `env:"OS_DEBUG" envDefault:"false"`
+}
+```
+
+> [!CAUTION]
+> No sensitive information (either in plain or encoded text) should be added here for any reason.
+
+Consequently, you might need to change the chart template values so they acknowledge and use the new parameters in the manifests.
+
+#### DNS Solver Configuration
+
+If you need to extend the configuration of the solver, extending its API Specs, you should extend struct `OpenTelekomCloudDnsProviderConfig`
+which can be found in [config.go](pkg%2Fdns%2Fconfig.go):
+
+```go
+type OpenTelekomCloudDnsProviderConfig struct {
+	// These fields will be set by users in the
+	// `issuer.spec.acme.dns01.providers.webhook.config` field.
+	Region             string                    `json:"region,required"`
+	AccessKeySecretRef *corev1.SecretKeySelector `json:"accessKeySecretRef,omitempty"`
+	SecretKeySecretRef *corev1.SecretKeySelector `json:"secretKeySecretRef,omitempty"`
+}
+```
+
+> [!CAUTION]
+> No sensitive information (either in plain or encoded text) should be added here for any reason.
+
+Consequently, you might need to change the chart template values so they acknowledge and use the new parameters in the manifests.
+
+#### Secrets
+
 ### Installation
 
 ### Conformance Testing
