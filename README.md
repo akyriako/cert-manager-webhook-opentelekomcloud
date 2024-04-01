@@ -17,13 +17,13 @@ This webhook is installed exclusively via [Helm](https://helm.sh/).
 Configure the Chart by setting the following parameters:
 
 - `groupName`: sets environment variable `GROUP_NAME`, defaults to `acme.opentelekomcloud.com`
-- `debug`: sets environment variable `OS_DEBUG`, defaults to `false`. When `true` lowers `slog.LogLevel` to `LevelDebug`
+- `debug`: sets environment variable `OS_DEBUG`, defaults to `false`. When `true`, lowers `slog.LogLevel` to `LevelDebug`
 - `credentialsSecretRef`: a reference to the Kubernetes `Secret` that will hold the OTC access & secret keys, defaults to `cert-manager-webhook-opentelekomcloud-creds`
 - `opentelekomcloud.accessKey`: the access key in plain text, **not required**
 - `opentelekomcloud.secretKey`: the secret key in plain text, **not required**
 
 > [!NOTE]
-> The remaining chart variables are, besides self-explanatory, the same that used already by cert-manager-webhook-example 
+> The remaining chart variables are, besides self-explanatory, the same that used already by [cert-manager/webhook-example](https://github.com/cert-manager/webhook-example) 
 
 ### One-step
 
@@ -76,6 +76,10 @@ data:
 ```
 
 ## Usage
+
+### Issuers & ClusterIssuers
+
+### Certificate
 
 ## Development
 
