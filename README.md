@@ -34,10 +34,10 @@ If `opentelekomcloud.accessKey` and `opentelekomcloud.secretKey` are **both set*
 - populate secret's `data` with the encoded values of `opentelekomcloud.accessKey` and `opentelekomcloud.secretKey`
 
 ```bash
-helm repo add otcdnswebhook https://www.github.com/akyriako/cert-manager-webhook-opentelekomcloud/
+helm repo add cert-manager-webhook-opentelekomcloud https://www.github.com/akyriako/cert-manager-webhook-opentelekomcloud/
 helm repo update
 
-helm upgrade --install cmw-otc deploy/cert-manager-webhook-opentelekomcloud \
+helm upgrade --install $CHART_RELEASE_NAME deploy/cert-manager-webhook-opentelekomcloud \
   --set opentelekomcloud.accessKey=$OS_ACCESS_KEY \
   --set opentelekomcloud.secretKey=$OS_SECRET_KEY \
   --namespace cert-manager
@@ -54,10 +54,10 @@ in two steps.
 First deploy the webhook:
 
 ```bash
-helm repo add otcdnswebhook https://www.github.com/akyriako/cert-manager-webhook-opentelekomcloud/
+helm repo add cert-manager-webhook-opentelekomcloud https://www.github.com/akyriako/cert-manager-webhook-opentelekomcloud/
 helm repo update
 
-helm upgrade --install cmw-otc deploy/cert-manager-webhook-opentelekomcloud \
+helm upgrade --install $CHART_RELEASE_NAME deploy/cert-manager-webhook-opentelekomcloud \
   --namespace cert-manager
 ```
 
