@@ -120,6 +120,23 @@ Consequently, you might need to change the chart template values so they acknowl
 
 #### Secrets
 
+If you need to extend the secrets & credentials of the solver, you should extend struct `OpenTelekomCloudDnsProviderConfig`
+which can be found in [config.go](pkg%2Fdns%2Fconfig.go):
+
+```go
+type OpenTelekomCloudDnsProviderSecrets struct {
+	AccessKey string `env:"OS_ACCESS_KEY,required"`
+	SecretKey string `env:"OS_SECRET_KEY,required"`
+}
+```
+
+Consequently, you might need to change the chart template values so they acknowledge and use the new parameters in the manifests.
+
+> [!TIP]
+> Access & Secret keys are enough to create an Open Telekom Cloud Provider Client and a DNS Service Client. User, Password,
+> Domain or Tenant identifiers are not needed for the DNS Solver to work. 
+
+
 ### Installation
 
 ### Conformance Testing
