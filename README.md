@@ -147,7 +147,30 @@ Deploy the manifest above with `kubectl`.
 
 ## Development
 
+If you dont't have a Kubernetes cluster in place, this project
+comes with "batteries included"; a [Dev Container](https://containers.dev) (a `.devcontainer.json` file that can be found in the repo
+and will be discussed in a later chapter) that instructs any IDE that supports Dev Containers, to set up an isolated
+containerized Kubernetes environment for you along with all necessary tooling (cert-manager, Helm etc.)
+
 ### Dev Container
+
+#### Extensions & Features
+
+A Dev Container will be created, with all the necessary prerequisites to get you started developing immediately. A
+container, based on `mcr.microsoft.com/devcontainers/go:1.21-bullseye` will be spawned with the following features pre-installed:
+
+- Golang 1.21
+- Tooltitude for Go (Free License)
+- Git, GitHub Actions, GitHub CLI, Git Graph
+- Docker in Docker
+- Kubectl, Helm, Helmfile, K9s, KinD, Dive
+- [Bridge to Kubernetes](https://learn.microsoft.com/en-us/visualstudio/bridge/overview-bridge-to-kubernetes) Visual Studio Code Extension
+- Resource Monitor
+
+A `postCreateCommand` (**.devcontainer/setup.sh**) will provision:
+
+- A containerized **Kubernetes cluster** with 1 control and 3 worker nodes **and** a private registry, using KinD (cluster manifest is in **.devcontainer/cluster.yaml**)
+- A fully functional installation of Cert-Manager 
 
 ### Extend
 

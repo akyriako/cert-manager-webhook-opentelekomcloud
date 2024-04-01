@@ -1,0 +1,32 @@
+{
+  "name": "cm-webhook-otc-dev",
+  "image": "mcr.microsoft.com/devcontainers/go:1.21-bullseye",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
+    "ghcr.io/devcontainers-contrib/features/kind:1": {},
+    "ghcr.io/schlich/devcontainer-features/helmfile:1": {},
+    "ghcr.io/nucleuscloud/devcontainer-features/helmfile:0": {},
+    "ghcr.io/audacioustux/devcontainers/k9s:1": {},
+    "ghcr.io/devcontainers-contrib/features/dive:1": {}
+  },
+//  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "golang.go",
+        "mutantdino.resourcemonitor",
+        "ms-vscode.makefile-tools",
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "mindaro.mindaro",
+        "mhutchie.git-graph",
+        "honnamkuan.golang-snippets",
+        "tooltitudeteam.tooltitude",
+        "github.vscode-github-actions"
+      ]
+    }
+  }
+}
