@@ -82,8 +82,8 @@ data:
 ### Conformance Testing
 
 ```bash
-$ TEST_ZONE_NAME=example.com. make test
+$ OS_DEBUG=true OS_ACCESS_KEY={AccessKeyinBase64} OS_SECRET_KEY={SecretKeyinBase64} TEST_ZONE_NAME=example.com. make test
 ```
-
-The example file has a number of areas you must fill in and replace with your
-own options in order for tests to pass.
+> [!NOTE]
+> Fill in the values of `OS_ACCESS_KEY` and `OS_SECRET_KEY`. Replace `example.com.` with your own (sub)domain.
+> Make sure not to forget the trailing `.` in the `TEST_ZONE_NAME` value.
