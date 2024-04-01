@@ -88,13 +88,13 @@ latter is cluster-wide.
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: example-letsencrypt-staging
+  name: opentelekomcloud-letsencrypt-staging
 spec:
   acme:
     email: user@example.com
     server: https://acme-staging-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: example-issuer-account-key
+      name: opentelekomcloud-letsencrypt-staging-key
     solvers:
     - dns01:
         webhook:
@@ -128,6 +128,22 @@ if requested.
 > [!IMPORTANT]
 In order to issue any certificates, you'll need to configure an `Issuer` or `ClusterIssuer` resource first.
 
+```yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-certificate-example-com
+spec:
+  dnsNames:
+  - '*.example.com'
+  - '*.subdomain.example.com'
+  issuerRef:
+    kind: ClusterIssuer
+    name: opentelekomcloud-letsencrypt-staging
+  secretName: wildcard-certificate-example-com-tls
+```
+
+Deploy the manifest above with `kubectl`.
 
 ## Development
 
