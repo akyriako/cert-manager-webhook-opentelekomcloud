@@ -139,6 +139,36 @@ Consequently, you might need to change the chart template values so they acknowl
 
 ### Installation
 
+In order to test the changes on a Kubernetes cluster, you need to build a new image, push the image to the container 
+registry of your choice and recreate the manifests that Helm will deploy to the Kubernetes cluster:
+
+For building new image, execute: 
+
+```shell
+make docker-build
+```
+
+For pushing the new image to a container registry, execute:
+
+```shell
+make docker-push
+```
+
+For creating the manifests out of the helm template, execute:
+
+```shell
+make rendered-manifest.yaml
+```
+
+The last one will create a yaml file that will contain all required manifests, `rendered-manifest.yaml`, in folder `_out`:
+You can then deploy them in your Kubernetes cluster using `kubectl`:
+
+```shell
+kubectl apply -f _out/rendered-manifest.yaml
+```
+
+
+
 ### Conformance Testing
 
 All DNS providers must run the DNS01 provider conformance testing suite, else they will have undetermined behaviour 
