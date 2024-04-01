@@ -115,8 +115,19 @@ spec:
 > - `solverName` should be `opentelekomcloud`, it is **not configurable**
 > - `accessKeySecretRef` and `secretKeySecretRef` can be set in chart parameter `credentialsSecretRef`, if not defaults to `cert-manager-webhook-opentelekomcloud-creds`
 
+Deploy the manifest above with `kubectl`.
 
 ### Certificate
+
+In cert-manager, the `Certificate` resource represents a human readable definition of a certificate request. 
+cert-manager uses this input to generate a private key and `CertificateRequest` resource in order to obtain a signed 
+certificate from an `Issuer` or `ClusterIssuer`. The signed certificate and private key are then stored in the 
+specified Secret resource. cert-manager will ensure that the certificate is auto-renewed before it expires and re-issued
+if requested.
+
+> [!IMPORTANT]
+In order to issue any certificates, you'll need to configure an `Issuer` or `ClusterIssuer` resource first.
+
 
 ## Development
 
