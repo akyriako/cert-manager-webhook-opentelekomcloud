@@ -18,7 +18,7 @@ Configure the Chart by setting the following parameters:
 
 - `groupName`: sets environment variable `GROUP_NAME`, defaults to `acme.opentelekomcloud.com`
 - `debug`: sets environment variable `OS_DEBUG`, defaults to `false`. When `true` lowers `slog.LogLevel` to `LevelDebug`
-- `credentialsSecretRef`: a reference to the Kubernetes `Secret` that will hold the OTC access & secret keys
+- `credentialsSecretRef`: a reference to the Kubernetes `Secret` that will hold the OTC access & secret keys, defaults to `cert-manager-webhook-opentelekomcloud-creds`
 - `opentelekomcloud.accessKey`: the access key in plain text, **not required**
 - `opentelekomcloud.secretKey`: the secret key in plain text, **not required**
 
@@ -48,8 +48,32 @@ set there the parameters.
 
 ### Two-steps
 
-If for any reason the **one-step** installation is not fit for your deployment pipeline you can split the installation 
+If for any reason the **one-step** installation is not fit for your deployment pipeline, you can split the installation 
 in two steps. 
+
+First deploy the webhook:
+
+```bash
+helm repo add otcdnswebhook https://www.github.com/akyriako/cert-manager-webhook-opentelekomcloud/
+helm repo update
+
+helm upgrade --install cmw-otc deploy/cert-manager-webhook-opentelekomcloud \
+  --namespace cert-manager
+```
+
+and then create and deploy a `Secret` manifest, that would match the name of `credentialsSecretRef` value:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cert-manager-webhook-opentelekomcloud-creds
+  namespace: cert-manager
+type: Opaque
+data:
+  accessKey: "<ACCESS_KEY_in_Base64>"
+  secretKey: "<SECRET_KEY_in_Base64>"
+```
 
 ## Development
 
