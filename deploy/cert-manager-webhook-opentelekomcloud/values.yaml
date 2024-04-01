@@ -7,7 +7,8 @@
 # This group name should be **unique**, hence using your own company's domain
 # here is recommended.
 groupName: acme.opentelekomcloud.com
-akskSecretRef: cert-manager-webhook-opentelekomcloud-creds
+credentialsSecretRef: cert-manager-webhook-opentelekomcloud-creds
+debug: false
 
 certManager:
   namespace: cert-manager
