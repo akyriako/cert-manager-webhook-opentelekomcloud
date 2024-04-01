@@ -11,7 +11,7 @@ containerized Kubernetes environment for you along with all necessary tooling (c
 
 ### Configuration 
 
-Additionally, you need to set the following environment variables for **cts_exporter**:
+Configure the Chart by setting the following parameters:
 
 - `groupName`: sets environment variable `GROUP_NAME`, defaults to `acme.opentelekomcloud.com`
 - `debug`: sets environment variable `OS_DEBUG`, defaults to `false`. When `true` lowers `slog.LogLevel` to `LevelDebug`
@@ -20,10 +20,17 @@ Additionally, you need to set the following environment variables for **cts_expo
 - `opentelekomcloud.secretKey`: the secret key in plain text, **not required**
 
 > [!NOTE]
-> The rest of chart variables are, besides self-explanatory, the same that used already by cert-manager-webhook-example 
-
+> The remaining chart variables are, besides self-explanatory, the same that used already by cert-manager-webhook-example 
 
 ### One-step
+
+If `opentelekomcloud.accessKey` and `opentelekomcloud.secretKey` are **both set**, the chart will **automatically**:
+
+- create the `credentialsSecretRef` secret
+- encode `opentelekomcloud.accessKey` and `opentelekomcloud.secretKey` in base64
+- populate secret's `data` with the encoded values of `opentelekomcloud.accessKey` and `opentelekomcloud.secretKey`
+
+
 
 ### Two-steps
 
