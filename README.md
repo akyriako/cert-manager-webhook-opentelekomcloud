@@ -79,6 +79,43 @@ data:
 
 ### Issuers & ClusterIssuers
 
+`Issuers`, and `ClusterIssuers`, are Kubernetes resources that represent certificate authorities (CAs) that are able to 
+generate signed certificates by honoring certificate signing requests. All cert-manager certificates require a 
+referenced issuer that is in a ready condition to attempt to honor the request. The former is namespaced-scoped while the
+latter is cluster-wide.
+
+```yaml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: example-letsencrypt-staging
+spec:
+  acme:
+    email: user@example.com
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: example-issuer-account-key
+    solvers:
+    - dns01:
+        webhook:
+          groupName: acme.opentelekomcloud.com
+          solverName: opentelekomcloud
+          config:
+            region: "eu-de"
+            accessKeySecretRef:
+              name: cert-manager-webhook-opentelekomcloud-creds
+              key: accessKey
+            secretKeySecretRef:
+              name: cert-manager-webhook-opentelekomcloud-creds
+              key: secretKey
+```
+
+> [!NOTE]
+> - `groupName` can be set in the respective chart parameter, otherwise defaults to `acme.opentelekomcloud.com`
+> - `solverName` should be `opentelekomcloud`, it is **not configurable**
+> - `accessKeySecretRef` and `secretKeySecretRef` can be set in chart parameter `credentialsSecretRef`, if not defaults to `cert-manager-webhook-opentelekomcloud-creds`
+
+
 ### Certificate
 
 ## Development
