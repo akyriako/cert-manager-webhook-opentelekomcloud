@@ -120,7 +120,7 @@ Consequently, you might need to change the chart template values so they acknowl
 
 #### Secrets
 
-If you need to extend the secrets & credentials of the solver, you should extend struct `OpenTelekomCloudDnsProviderConfig`
+If you need to extend the secrets & credentials of the solver, you should extend struct `OpenTelekomCloudDnsProviderSecrets`
 which can be found in [config.go](pkg%2Fdns%2Fconfig.go):
 
 ```go
