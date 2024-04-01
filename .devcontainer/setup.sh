@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Install the required tools and dependencies
-# sudo apt-get update
-
 # 1. Create registry container unless it already exists
 reg_name='kind-registry'
 reg_port='5001'
@@ -13,13 +10,13 @@ if [ "$(docker inspect -f '{{.State.Running}}' "${reg_name}" 2>/dev/null || true
 fi
 
 # 2. Create a KinD cluster
-if kind get clusters | grep -q "neo4j"; then
-echo "A Kubernetes cluster with the name 'neo4j' already exists."
-mkdir ~/.kube && kind --name neo4j export kubeconfig >> ~/.kube/config
+if kind get clusters | grep -q "cmw"; then
+echo "A Kubernetes cluster with the name 'cmw' already exists."
+mkdir ~/.kube && kind --name cmw export kubeconfig >> ~/.kube/config
 chmod 400 ~/.kube/config
-kubectl config use-context kind-neo4j
+kubectl config use-context kind-cmw
 else
-kind create cluster --name=neo4j --config .devcontainer/cluster.yaml
+kind create cluster --name=cmw --config .devcontainer/cluster.yaml
 
 # 3. Add the registry config to the nodes
 #
@@ -30,7 +27,7 @@ kind create cluster --name=neo4j --config .devcontainer/cluster.yaml
 # We want a consistent name that works from both ends, so we tell containerd to
 # alias localhost:${reg_port} to the registry container when pulling images
 REGISTRY_DIR="/etc/containerd/certs.d/localhost:${reg_port}"
-for node in $(kind get nodes --name=neo4j); do
+for node in $(kind get nodes --name=cmw); do
   docker exec "${node}" mkdir -p "${REGISTRY_DIR}"
   cat <<EOF | docker exec -i "${node}" cp /dev/stdin "${REGISTRY_DIR}/hosts.toml"
 [host."http://${reg_name}:5000"]
@@ -57,19 +54,25 @@ data:
     help: "https://kind.sigs.k8s.io/docs/user/local-registry/"
 EOF
 
-mkdir ~/.kube && kind --name neo4j export kubeconfig >> ~/.kube/config
+mkdir ~/.kube && kind --name cmw export kubeconfig >> ~/.kube/config
 chmod 400 ~/.kube/config
-kubectl config use-context kind-neo4j
+kubectl config use-context kind-cmw
 
 fi
 
-# 6. Provision a Neo4j cluster on Kubernetes
-if helm list -A | grep -q "n4j-cluster"; then
-    echo "A chart with the name 'n4j-cluster' already exists."
+# 6. Provision a cert-manager on Kubernetes
+if helm list -A | grep -q "cert-manager"; then
+    echo "A chart with the name 'cert-manager' already exists."
 else
-    helm repo add neo4j https://helm.neo4j.com/neo4j
+    helm repo add jetstack https://charts.jetstack.io --force-update
     helm repo update
 
-    helm upgrade --install n4j-cluster neo4j/neo4j -f .devcontainer/overrides.yaml -n n4j --create-namespace
+    helm upgrade --install \
+    cert-manager jetstack/cert-manager \
+      --namespace cert-manager \
+      --create-namespace \
+      --version v1.14.4 \
+      --set installCRDs=true \
+      --create-namespace
 fi
 

@@ -12,7 +12,7 @@
     "ghcr.io/audacioustux/devcontainers/k9s:1": {},
     "ghcr.io/devcontainers-contrib/features/dive:1": {}
   },
-//  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "postCreateCommand": "bash .devcontainer/setup.sh",
   "customizations": {
     "vscode": {
       "extensions": [
