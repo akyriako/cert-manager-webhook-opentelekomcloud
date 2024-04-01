@@ -1,54 +1,37 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/cert-manager/cert-manager/d53c0b9270f8cd90d908460d69502694e1838f5f/logo/logo-small.png" height="256" width="256" alt="cert-manager project logo" />
-</p>
+# ACME webhook for Open Telekom Cloud DNS
 
-# ACME webhook example
+Summary
 
-The ACME issuer type supports an optional 'webhook' solver, which can be used
-to implement custom DNS01 challenge solving logic.
+## Installation
 
-This is useful if you need to use cert-manager with a DNS provider that is not
-officially supported in cert-manager core.
+This webhook is installed exclusively via [Helm](https://helm.sh/). If you dont't have a Kubernetes cluster in place, this project
+comes as well with "batteries included" via a Dev Container (a `.devcontainer.json` file that can be found in the repo
+and will be discussed in a later chapter) that instructs any IDE that supports Dev Containers, to set up an isolated 
+containerized Kubernetes environment for you along with all necessary tooling (cert-manager, Helm etc.)
 
-## Why not in core?
+### Configuration 
 
-As the project & adoption has grown, there has been an influx of DNS provider
-pull requests to our core codebase. As this number has grown, the test matrix
-has become un-maintainable and so, it's not possible for us to certify that
-providers work to a sufficient level.
+Additionally, you need to set the following environment variables for **cts_exporter**:
 
-By creating this 'interface' between cert-manager and DNS providers, we allow
-users to quickly iterate and test out new integrations, and then packaging
-those up themselves as 'extensions' to cert-manager.
+- `groupName`: sets environment variable `GROUP_NAME`, defaults to `acme.opentelekomcloud.com`
+- `debug`: sets environment variable `OS_DEBUG`, defaults to `false`. When `true` lowers `slog.LogLevel` to `LevelDebug`
+- `credentialsSecretRef`: a reference to the Kubernetes `Secret` that will hold the OTC access & secret keys
+- `opentelekomcloud.accessKey`: the access key in plain text, **not required**
+- `opentelekomcloud.secretKey`: the secret key in plain text, **not required**
 
-We can also then provide a standardised 'testing framework', or set of
-conformance tests, which allow us to validate the a DNS provider works as
-expected.
+> [!NOTE]
+> The rest of chart variables are, besides self-explanatory, the same that used already by cert-manager-webhook-example 
 
-## Creating your own webhook
 
-Webhook's themselves are deployed as Kubernetes API services, in order to allow
-administrators to restrict access to webhooks with Kubernetes RBAC.
+### One-step
 
-This is important, as otherwise it'd be possible for anyone with access to your
-webhook to complete ACME challenge validations and obtain certificates.
+### Two-steps
 
-To make the set up of these webhook's easier, we provide a template repository
-that can be used to get started quickly.
+## Development
 
-### Creating your own repository
+### Dev Container
 
-### Running the test suite
-
-All DNS providers **must** run the DNS01 provider conformance testing suite,
-else they will have undetermined behaviour when used with cert-manager.
-
-**It is essential that you configure and run the test suite when creating a
-DNS01 webhook.**
-
-An example Go test file has been provided in [main_test.go](https://github.com/cert-manager/webhook-example/blob/master/main_test.go).
-
-You can run the test suite with:
+### Conformance Testing
 
 ```bash
 $ TEST_ZONE_NAME=example.com. make test
