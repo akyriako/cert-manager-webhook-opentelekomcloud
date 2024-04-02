@@ -45,6 +45,7 @@ rendered-manifest.yaml: $(OUT)/rendered-manifest.yaml
 $(OUT)/rendered-manifest.yaml: $(HELM_FILES) | $(OUT)
 	helm template \
 	    $(RELEASE_NAME) \
+		--set debug=true \
         --set image.repository=$(IMAGE_NAME) \
         --set image.tag=$(IMAGE_TAG) \
         --set opentelekomcloud.accessKey=$(OS_ACCESS_KEY) \
