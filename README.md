@@ -163,6 +163,10 @@ containerized Kubernetes environment for you along with all necessary tooling (c
 
 ### Dev Container
 
+> [!NOTE]
+> Although you can use any IDE that supports Dev Containers, the extensions and features added on the base image are 
+> tailored for Visual Studio Code.
+
 #### Extensions & Features
 
 A Dev Container will be created, with all the necessary prerequisites to get you started developing immediately. A
