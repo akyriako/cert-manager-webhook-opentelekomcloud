@@ -14,6 +14,7 @@ import (
 
 const (
 	solverReferenceName string = "opentelekomcloud"
+	verbosity                  = klog.Level(4)
 )
 
 // OpenTelekomCloudDnsProviderSolver implements the provider-specific logic needed to
@@ -116,7 +117,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) CleanUp(ch *v1alpha1.ChallengeReques
 	}
 
 	if len(recordSets) == 0 {
-		klog.V(6).Info(
+		klog.V(verbosity).Info(
 			fmt.Sprintf("clean up skipped: found 0 recordsets matching %s in zone %s",
 				ch.ResolvedFQDN,
 				ch.ResolvedZone),
@@ -144,7 +145,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) CleanUp(ch *v1alpha1.ChallengeReques
 // The stopCh can be used to handle early termination of the webhook, in cases
 // where a SIGTERM or similar signal is sent to the webhook process.
 func (s *OpenTelekomCloudDnsProviderSolver) Initialize(kubeClientConfig *rest.Config, stopCh <-chan struct{}) error {
-	klog.V(6).Info(fmt.Sprintf("initializing cert-manager-webhook-%s", solverReferenceName))
+	klog.V(verbosity).Info(fmt.Sprintf("initializing cert-manager-webhook-%s", solverReferenceName))
 	initializeErr := fmt.Errorf(fmt.Sprintf(
 		"initializing cert-manager-webhook-%s failed",
 		solverReferenceName,
@@ -165,6 +166,6 @@ func (s *OpenTelekomCloudDnsProviderSolver) Initialize(kubeClientConfig *rest.Co
 
 	s.k8sClient = client
 
-	klog.V(6).Info(fmt.Sprintf("initialized cert-manager-webhook-%s", solverReferenceName))
+	klog.V(verbosity).Info(fmt.Sprintf("initialized cert-manager-webhook-%s", solverReferenceName))
 	return nil
 }

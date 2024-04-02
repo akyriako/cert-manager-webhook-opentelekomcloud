@@ -29,7 +29,7 @@ spec:
             - --tls-cert-file=/tls/tls.crt
             - --tls-private-key-file=/tls/tls.key
             {{- if eq .Values.debug true }}
-            - --v=6
+            - --v=4
             {{- end }}
           env:
             - name: GROUP_NAME

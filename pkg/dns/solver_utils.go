@@ -32,7 +32,7 @@ func GetOpenTelekomCloudDnsServerAddress() string {
 	idx := rand.Intn(len(OpenTelekomCloudDnsServers))
 	dnsServerAddress := OpenTelekomCloudDnsServers[idx]
 
-	klog.V(6).Info(fmt.Sprintf("opentelekomcloud nameserver %s will be used", dnsServerAddress))
+	klog.V(verbosity).Info(fmt.Sprintf("opentelekomcloud nameserver %s will be used", dnsServerAddress))
 	return dnsServerAddress
 }
 
@@ -46,13 +46,13 @@ func (s *OpenTelekomCloudDnsProviderSolver) setOpenTelekomCloudDnsServiceClient(
 		return errors.Wrap(err, "loading challenge-request config failed")
 	}
 
-	klog.V(6).Info("loaded challenge request config")
+	klog.V(verbosity).Info("loaded challenge request config")
 
 	inCluster := false
 	secret := &OpenTelekomCloudDnsProviderSecrets{}
 	err = env.Parse(secret)
 	if err != nil {
-		klog.V(6).Info(fmt.Sprintf("no ak/sk pair found in env variables, falling back to kubernetes secrets"))
+		klog.V(verbosity).Info(fmt.Sprintf("no ak/sk pair found in env variables, falling back to kubernetes secrets"))
 		inCluster = true
 	}
 
@@ -83,7 +83,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) setOpenTelekomCloudDnsServiceClient(
 		return errors.Wrap(err, "creating an opentelekomcloud dns service client failed")
 	}
 
-	klog.V(6).Info("created an opentelekomcloud dns service client")
+	klog.V(verbosity).Info("created an opentelekomcloud dns service client")
 
 	s.dnsClient = dnsServiceClient
 	return nil
@@ -122,7 +122,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) getSecret(namespace string, secretKe
 		return "", fmt.Errorf("could not get key %s in secret %s", secretKeyRef.Key, secretKeyRef.Name)
 	}
 
-	klog.V(6).Info(fmt.Sprintf("fetched secret: %s", secretKeyRef.Name))
+	klog.V(verbosity).Info(fmt.Sprintf("fetched secret: %s", secretKeyRef.Name))
 	return string(data), nil
 }
 

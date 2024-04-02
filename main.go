@@ -6,11 +6,7 @@ import (
 	"github.com/akyriako/cert-manager-webhook-opentelekomcloud/pkg/dns"
 	"github.com/caarlos0/env/v10"
 	"github.com/cert-manager/cert-manager/pkg/acme/webhook/cmd"
-	"github.com/go-logr/logr"
-	"go.uber.org/zap/zapcore"
 	"k8s.io/klog/v2"
-	ctrl "sigs.k8s.io/controller-runtime"
-	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 )
 
 type config struct {
@@ -26,8 +22,7 @@ const (
 )
 
 var (
-	cfg    config
-	logger logr.Logger
+	cfg config
 )
 
 func init() {
@@ -36,14 +31,6 @@ func init() {
 		klog.Errorf(fmt.Sprintf("parsing env variables failed. %s", err.Error()))
 		klog.FlushAndExit(klog.ExitFlushTimeout, exitCodeConfigurationError)
 	}
-
-	opts := zap.Options{
-		Development:     cfg.Debug,
-		StacktraceLevel: zapcore.DPanicLevel,
-	}
-
-	logger = zap.New(zap.UseFlagOptions(&opts))
-	ctrl.SetLogger(logger)
 }
 
 func main() {
