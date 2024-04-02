@@ -1,6 +1,13 @@
 # ACME webhook for Open Telekom Cloud DNS
 
-Summary
+[Cert-manager](https://cert-manager.io/) DNS providers are integrations with various DNS (Domain Name System) service 
+providers that allow cert-manager, a Kubernetes add-on, to automate the management of SSL/TLS certificates. 
+DNS providers enable cert-manager to automatically perform challenges to prove domain ownership and obtain certificates 
+from certificate authorities like [Let's Encrypt](https://letsencrypt.org/).
+
+By configuring cert-manager with the compatible Open Telekom Cloud DNS provider, using this webhook, you can set up 
+automatic certificate issuance and renewal for your Open Telekom Cloud CCE workloads without manual intervention. 
+This automation is crucial for securing web applications and services deployed on CCE clusters.
 
 ## Installation
 
@@ -49,19 +56,9 @@ set there the parameters.
 ### Two-steps
 
 If for any reason the **one-step** installation is not fit for your deployment pipeline, you can split the installation 
-in two steps. 
+in two steps:
 
-First deploy the webhook:
-
-```bash
-helm repo add cert-manager-webhook-opentelekomcloud https://www.github.com/akyriako/cert-manager-webhook-opentelekomcloud/
-helm repo update
-
-helm upgrade --install $CHART_RELEASE_NAME deploy/cert-manager-webhook-opentelekomcloud \
-  --namespace cert-manager
-```
-
-and then create and deploy a `Secret` manifest, that would match the name of `credentialsSecretRef` value:
+First create and deploy a `Secret` manifest, that would match the name of `credentialsSecretRef` value:
 
 ```yaml
 apiVersion: v1
@@ -73,6 +70,18 @@ type: Opaque
 data:
   accessKey: "<ACCESS_KEY_in_Base64>"
   secretKey: "<SECRET_KEY_in_Base64>"
+```
+
+Deploy the secret with `kubectl`
+
+and then deploy the webhook:
+
+```bash
+helm repo add cert-manager-webhook-opentelekomcloud https://www.github.com/akyriako/cert-manager-webhook-opentelekomcloud/
+helm repo update
+
+helm upgrade --install $CHART_RELEASE_NAME deploy/cert-manager-webhook-opentelekomcloud \
+  --namespace cert-manager
 ```
 
 ## Usage
