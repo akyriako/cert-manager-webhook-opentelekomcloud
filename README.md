@@ -50,6 +50,22 @@ helm upgrade --install $CHART_RELEASE_NAME deploy/cert-manager-webhook-opentelek
   --namespace cert-manager
 ```
 
+If additionally `debug` parameter is set to `true`, `--set debug=true`, the helm chart will add to the deployment of the
+container an additional argument to increase logging verbosity:
+
+```yaml
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - --tls-cert-file=/tls/tls.crt
+            - --tls-private-key-file=/tls/tls.key
+            {{- if eq .Values.debug true }}
+            - --v=4
+            {{- end }}
+```
+
 or you can alternatively override the [values.yaml](deploy%2Fcert-manager-webhook-opentelekomcloud%2Fvalues.yaml) and
 set there the parameters.
 
