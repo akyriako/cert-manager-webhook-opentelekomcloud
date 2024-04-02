@@ -119,11 +119,10 @@ spec:
               key: secretKey
 ```
 
-> [!NOTE]
-> - `groupName` can be set in the respective chart parameter, otherwise defaults to `acme.opentelekomcloud.com`
-> - `solverName` should be `opentelekomcloud`, it is **not configurable**
-> - `region`, although configurable and required, it can only be set to `eu-de`
-> - `accessKeySecretRef` and `secretKeySecretRef` can be set in chart parameter `credentialsSecretRef`, if not defaults to `cert-manager-webhook-opentelekomcloud-creds`
+- `groupName` can be set in the respective chart parameter, otherwise defaults to `acme.opentelekomcloud.com`
+- `solverName` should be `opentelekomcloud`, it is **not configurable**
+- `region`, although configurable and required, it can only be set to `eu-de`
+- `accessKeySecretRef` and `secretKeySecretRef` can be set in chart parameter `credentialsSecretRef`, if not defaults to `cert-manager-webhook-opentelekomcloud-creds`
 
 Deploy the manifest above with `kubectl`.
 
