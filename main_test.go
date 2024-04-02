@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"github.com/akyriako/cert-manager-webhook-opentelekomcloud/pkg/dns"
+	"go.uber.org/zap/zapcore"
 	"os"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
@@ -16,11 +17,15 @@ var (
 )
 
 // Sets the controller-runtime logger otherwise test suite is raising a warning as
-// it is not yet refactored to support newest structured logging logger (slog) that
+// it is not yet refactored to support the newest structured logging logger (slog) that
 // is introduced in Golang 1.21
 func init() {
-	opts := zap.Options{}
-	logger := zap.New(zap.UseFlagOptions(&opts))
+	opts := zap.Options{
+		Development:     true,
+		StacktraceLevel: zapcore.DPanicLevel,
+	}
+
+	logger = zap.New(zap.UseFlagOptions(&opts))
 	logf.SetLogger(logger)
 }
 

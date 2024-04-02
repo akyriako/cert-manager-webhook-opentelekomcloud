@@ -24,7 +24,7 @@ This webhook is installed exclusively via [Helm](https://helm.sh/).
 Configure the Chart by setting the following parameters:
 
 - `groupName`: sets environment variable `GROUP_NAME`, defaults to `acme.opentelekomcloud.com`
-- `debug`: sets environment variable `OS_DEBUG`, defaults to `false`. When `true`, lowers `slog.LogLevel` to `LevelDebug`
+- `debug`: sets environment variable `OS_DEBUG`, defaults to `false`. When `true`, raises `klog` verbosity to `6`. It must be **boolean**
 - `credentialsSecretRef`: a reference to the Kubernetes `Secret` that will hold the OTC access & secret keys, defaults to `cert-manager-webhook-opentelekomcloud-creds`
 - `opentelekomcloud.accessKey`: the access key in plain text, **not required**
 - `opentelekomcloud.secretKey`: the secret key in plain text, **not required**
@@ -98,12 +98,13 @@ apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: opentelekomcloud-letsencrypt-staging
+  namespace: cert-manager
 spec:
   acme:
     email: user@example.com
     server: https://acme-staging-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: opentelekomcloud-letsencrypt-staging-key
+      name: opentelekomcloud-letsencrypt-staging-tls-key
     solvers:
     - dns01:
         webhook:
@@ -141,15 +142,15 @@ In order to issue any certificates, you'll need to configure an `Issuer` or `Clu
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: wildcard-certificate-example-com
+  name: certificate-subdomain-example-com
+  namespace: cert-manager
 spec:
   dnsNames:
-  - '*.example.com'
   - '*.subdomain.example.com'
   issuerRef:
     kind: ClusterIssuer
     name: opentelekomcloud-letsencrypt-staging
-  secretName: wildcard-certificate-example-com-tls
+  secretName: certificate-subdomain-example-com-tls
 ```
 
 Deploy the manifest above with `kubectl`.

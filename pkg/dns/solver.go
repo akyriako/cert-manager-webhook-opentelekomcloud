@@ -9,7 +9,7 @@ import (
 	"github.com/pkg/errors"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-	"log/slog"
+	"k8s.io/klog/v2"
 )
 
 const (
@@ -50,7 +50,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) Name() string {
 // cert-manager itself will later perform a self check to ensure that the
 // solver has correctly configured the DNS provider.
 func (s *OpenTelekomCloudDnsProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
-	slog.Debug("starting challenge request 'present'", "dnsName", ch.DNSName, "zone", ch.ResolvedZone, "fqdn", ch.ResolvedFQDN)
+	klog.InfoS("starting challenge request present", "dnsName", ch.DNSName, "zone", ch.ResolvedZone, "fqdn", ch.ResolvedFQDN)
 	err := s.setOpenTelekomCloudDnsServiceClient(ch)
 	if err != nil {
 		return errors.Wrap(err, "present failed")
@@ -88,7 +88,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) Present(ch *v1alpha1.ChallengeReques
 		return errors.Wrap(err, "present failed")
 	}
 
-	slog.Debug("completed challenge request 'present'", "dnsName", ch.DNSName, "zone", ch.ResolvedZone, "fqdn", ch.ResolvedFQDN)
+	klog.InfoS("completed challenge request present", "dnsName", ch.DNSName, "zone", ch.ResolvedZone, "fqdn", ch.ResolvedFQDN)
 	return nil
 }
 
@@ -99,7 +99,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) Present(ch *v1alpha1.ChallengeReques
 // This is in order to facilitate multiple DNS validations for the same domain
 // concurrently.
 func (s *OpenTelekomCloudDnsProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
-	slog.Debug("starting challenge request 'cleanup' ", "zone", ch.ResolvedZone, "fqdn", ch.ResolvedFQDN)
+	klog.InfoS("starting challenge request cleanup", "zone", ch.ResolvedZone, "fqdn", ch.ResolvedFQDN)
 	err := s.setOpenTelekomCloudDnsServiceClient(ch)
 	if err != nil {
 		return errors.Wrap(err, "clean up failed")
@@ -116,7 +116,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) CleanUp(ch *v1alpha1.ChallengeReques
 	}
 
 	if len(recordSets) == 0 {
-		slog.Debug(
+		klog.V(6).Info(
 			fmt.Sprintf("clean up skipped: found 0 recordsets matching %s in zone %s",
 				ch.ResolvedFQDN,
 				ch.ResolvedZone),
@@ -130,7 +130,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) CleanUp(ch *v1alpha1.ChallengeReques
 		return errors.Wrap(err, "clean up failed")
 	}
 
-	slog.Debug("completed challenge request 'cleanup' ", "zone", ch.ResolvedZone, "fqdn", ch.ResolvedFQDN)
+	klog.InfoS("completed challenge request cleanup", "zone", ch.ResolvedZone, "fqdn", ch.ResolvedFQDN)
 	return nil
 }
 
@@ -144,7 +144,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) CleanUp(ch *v1alpha1.ChallengeReques
 // The stopCh can be used to handle early termination of the webhook, in cases
 // where a SIGTERM or similar signal is sent to the webhook process.
 func (s *OpenTelekomCloudDnsProviderSolver) Initialize(kubeClientConfig *rest.Config, stopCh <-chan struct{}) error {
-	slog.Debug(fmt.Sprintf("initiazing cert-manager-webhook-%s", solverReferenceName))
+	klog.V(6).Info(fmt.Sprintf("initializing cert-manager-webhook-%s", solverReferenceName))
 	initializeErr := fmt.Errorf(fmt.Sprintf(
 		"initializing cert-manager-webhook-%s failed",
 		solverReferenceName,
@@ -165,6 +165,6 @@ func (s *OpenTelekomCloudDnsProviderSolver) Initialize(kubeClientConfig *rest.Co
 
 	s.k8sClient = client
 
-	slog.Debug(fmt.Sprintf("initialized cert-manager-webhook-%s", solverReferenceName))
+	klog.V(6).Info(fmt.Sprintf("initialized cert-manager-webhook-%s", solverReferenceName))
 	return nil
 }
