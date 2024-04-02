@@ -180,6 +180,40 @@ A `postCreateCommand` (**.devcontainer/setup.sh**) will provision:
 - A containerized **Kubernetes cluster** with 1 control and 3 worker nodes **and** a private registry, using KinD (cluster manifest is in **.devcontainer/cluster.yaml**)
 - A fully functional installation of Cert-Manager 
 
+### Installation
+
+In order to test the changes on a Kubernetes cluster, you need to build a new image, push the image to the container
+registry of your choice and recreate the manifests that Helm will deploy to the Kubernetes cluster:
+
+For building new image, execute:
+
+```shell
+make docker-build
+```
+
+For pushing the new image to a container registry, execute:
+
+```shell
+make docker-push
+```
+
+For creating the manifests out of the helm template, execute:
+
+```shell
+make rendered-manifest.yaml
+```
+
+> [!NOTE]
+> Before executing the above target, you have to make sure that you have set the values of the following environment
+> variables: `OS_ACCESS_KEY` and `OS_SECRET_KEY`.
+
+The last one will create a yaml file that will contain all required manifests, `rendered-manifest.yaml`, in folder `_out`:
+You can then deploy them in your Kubernetes cluster using `kubectl`:
+
+```shell
+kubectl apply -f _out/rendered-manifest.yaml
+```
+
 ### Extend
 
 #### Webhook Configuration
@@ -236,41 +270,6 @@ Consequently, you might need to change the chart template values so they acknowl
 > [!TIP]
 > Access & Secret keys are enough to create an Open Telekom Cloud Provider Client and a DNS Service Client. User, Password,
 > Domain or Tenant identifiers are not needed for the DNS Solver to work. 
-
-
-### Installation
-
-In order to test the changes on a Kubernetes cluster, you need to build a new image, push the image to the container 
-registry of your choice and recreate the manifests that Helm will deploy to the Kubernetes cluster:
-
-For building new image, execute: 
-
-```shell
-make docker-build
-```
-
-For pushing the new image to a container registry, execute:
-
-```shell
-make docker-push
-```
-
-For creating the manifests out of the helm template, execute:
-
-```shell
-make rendered-manifest.yaml
-```
-
-> [!NOTE]
-> Before executing the above target, you have to make sure that you have set the values of the following environment
-> variables: `OS_ACCESS_KEY` and `OS_SECRET_KEY`.
-
-The last one will create a yaml file that will contain all required manifests, `rendered-manifest.yaml`, in folder `_out`:
-You can then deploy them in your Kubernetes cluster using `kubectl`:
-
-```shell
-kubectl apply -f _out/rendered-manifest.yaml
-```
 
 ### Conformance Testing
 
