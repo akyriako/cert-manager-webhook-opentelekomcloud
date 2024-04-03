@@ -9,7 +9,7 @@ OUT := $(shell pwd)/_out
 
 KUBEBUILDER_VERSION=1.28.0
 
-HELM_FILES := $(shell find deploy/cert-manager-webhook-opentelekomcloud)
+HELM_FILES := $(shell find charts/cert-manager-webhook-opentelekomcloud)
 RELEASE_NAME := "test"
 
 test: _test/kubebuilder-$(KUBEBUILDER_VERSION)-$(OS)-$(ARCH)/etcd _test/kubebuilder-$(KUBEBUILDER_VERSION)-$(OS)-$(ARCH)/kube-apiserver _test/kubebuilder-$(KUBEBUILDER_VERSION)-$(OS)-$(ARCH)/kubectl
@@ -51,7 +51,7 @@ $(OUT)/rendered-manifest.yaml: $(HELM_FILES) | $(OUT)
         --set opentelekomcloud.accessKey=$(OS_ACCESS_KEY) \
         --set opentelekomcloud.secretKey=$(OS_SECRET_KEY) \
         --namespace cert-manager \
-        deploy/cert-manager-webhook-opentelekomcloud > $@
+        charts/cert-manager-webhook-opentelekomcloud > $@
 
 _test $(OUT) _test/kubebuilder-$(KUBEBUILDER_VERSION)-$(OS)-$(ARCH):
 	mkdir -p $@
