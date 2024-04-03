@@ -3,7 +3,7 @@ OS ?= $(shell $(GO) env GOOS)
 ARCH ?= $(shell $(GO) env GOARCH)
 
 IMAGE_NAME := "akyriako78/cert-manager-webhook-opentelekomcloud"
-IMAGE_TAG  ?= $(shell git log -1 --format="%H")
+IMAGE_TAG  ?= "v0.1.2"
 
 OUT := $(shell pwd)/_out
 

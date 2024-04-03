@@ -16,7 +16,7 @@ certManager:
 
 image:
   repository: akyriako78/cert-manager-webhook-opentelekomcloud
-  tag: 56c52f3
+  tag: v0.1.2
   pullPolicy: IfNotPresent
 
 replicaCount: 1
