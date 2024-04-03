@@ -1,14 +1,5 @@
 apiVersion: v1
 entries:
-  cert-manager-opentelekomcloud-webhook:
-  - apiVersion: v1
-    appVersion: v0.1.0
-    created: "2024-04-03T00:07:51.247205339Z"
-    description: Open Telekom Cloud ACME DNS01 cert-manager-webhook
-    digest: f4f6547ea4b6030694d8d16ca0afe8b26781eae9f6b8d4847b5b4d6739a82558
-    name: cert-manager-opentelekomcloud-webhook
-    urls:
-    - https://github.com/akyriako/cert-manager-webhook-opentelekomcloud/releases/download/cert-manager-opentelekomcloud-webhook-0.1.0/cert-manager-opentelekomcloud-webhook-0.1.0.tgz
   cert-manager-webhook-opentelekomcloud:
   - apiVersion: v1
     appVersion: v0.1.2
