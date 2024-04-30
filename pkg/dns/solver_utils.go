@@ -143,11 +143,21 @@ func (s *OpenTelekomCloudDnsProviderSolver) getResolvedZone(ch *v1alpha1.Challen
 		return nil, errors.Wrap(err, fmt.Sprintf("%s up failed", strings.ToLower(string(ch.Action))))
 	}
 
-	if len(allZones) != 1 {
-		return nil, fmt.Errorf("%s failed: found %v while expecting 1 for zone %s", action, len(allZones), ch.ResolvedZone)
+	if len(allZones) < 1 {
+		return nil, fmt.Errorf("found %v while expecting 1 for zone %s", len(allZones), ch.ResolvedZone)
 	}
 
-	return &allZones[0], nil
+	minZoneNameLength := 256
+	zoneIdx := 0
+
+	for idx, zone := range allZones {
+		if len(zone.Name) < minZoneNameLength {
+			minZoneNameLength = len(zone.Name)
+			zoneIdx = idx
+		}
+	}
+
+	return &allZones[zoneIdx], nil
 }
 
 func (s *OpenTelekomCloudDnsProviderSolver) getTxtRecordSetsByZone(ch *v1alpha1.ChallengeRequest, zone *zones.Zone) ([]recordsets.RecordSet, error) {
