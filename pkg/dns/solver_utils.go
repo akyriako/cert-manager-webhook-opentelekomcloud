@@ -2,7 +2,7 @@ package dns
 
 import (
 	"fmt"
-	"github.com/caarlos0/env/v10"
+	"github.com/caarlos0/env/v11"
 	"github.com/cert-manager/cert-manager/pkg/acme/webhook/apis/acme/v1alpha1"
 	golangsdk "github.com/opentelekomcloud/gophertelekomcloud"
 	"github.com/opentelekomcloud/gophertelekomcloud/openstack"
