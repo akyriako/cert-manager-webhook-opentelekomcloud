@@ -151,8 +151,10 @@ certificate from an `Issuer` or `ClusterIssuer`. The signed certificate and priv
 specified Secret resource. cert-manager will ensure that the certificate is auto-renewed before it expires and re-issued
 if requested.
 
-> [!IMPORTANT]
-In order to issue any certificates, you'll need to configure an `Issuer` or `ClusterIssuer` resource first.
+> [!CAUTION]
+> In order to issue any certificates, you'll need to configure an `Issuer` or `ClusterIssuer` resource first. **Nevertheless**,
+> at the time of this writing, cert-manager webhooks seems to have a known bug working with `Issuers` in this scenario 
+> and you are strongly recommended to create a `ClusterIssuer` instead, until it is officially solved.
 
 ```yaml
 apiVersion: cert-manager.io/v1
@@ -299,7 +301,7 @@ All DNS providers must run the DNS01 provider conformance testing suite, else th
 when used with cert-manager.
 
 ```bash
-$ OS_DEBUG=true OS_ACCESS_KEY={AccessKeyinBase64} OS_SECRET_KEY={SecretKeyinBase64} TEST_ZONE_NAME=example.com. make test
+$ OS_DEBUG=true OS_ACCESS_KEY={AccessKey} OS_SECRET_KEY={SecretKey} TEST_ZONE_NAME=example.com. make test
 ```
 > [!NOTE]
 > Fill in the values of `OS_ACCESS_KEY` and `OS_SECRET_KEY`. Replace `example.com.` with your own (sub)domain.

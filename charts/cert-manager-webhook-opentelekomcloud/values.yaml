@@ -15,8 +15,8 @@ certManager:
   serviceAccountName: cert-manager
 
 image:
-  repository: ghcr.io/iits-consulting/cert-manager-webhook-opentelekomcloud
-  tag: v0.1.4
+  repository: akyriako78/cert-manager-webhook-opentelekomcloud
+  tag: v0.1.5
   pullPolicy: IfNotPresent
 
 replicaCount: 1

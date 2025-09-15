@@ -1,13 +1,13 @@
 {
   "name": "cm-webhook-otc-dev",
-  "image": "mcr.microsoft.com/devcontainers/go:1.21-bullseye",
+  "image": "mcr.microsoft.com/devcontainers/go:1.24-bullseye",
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {},
     "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
-    "ghcr.io/devcontainers-contrib/features/kind:1": {},
+    "ghcr.io/devcontainers-extra/features/kind:1": {},
     "ghcr.io/audacioustux/devcontainers/k9s:1": {},
-    "ghcr.io/devcontainers-contrib/features/dive:1": {}
+    "ghcr.io/devcontainers-extra/features/dive:1": {}
   },
   "postCreateCommand": "bash .devcontainer/setup.sh",
   "customizations": {

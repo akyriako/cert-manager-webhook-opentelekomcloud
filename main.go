@@ -2,9 +2,8 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/akyriako/cert-manager-webhook-opentelekomcloud/pkg/dns"
-	"github.com/caarlos0/env/v10"
+	"github.com/caarlos0/env/v11"
 	"github.com/cert-manager/cert-manager/pkg/acme/webhook/cmd"
 	"k8s.io/klog/v2"
 )
@@ -28,7 +27,8 @@ var (
 func init() {
 	err := env.Parse(&cfg)
 	if err != nil {
-		klog.Errorf(fmt.Sprintf("parsing env variables failed. %s", err.Error()))
+		//msg := fmt.Sprintf("parsing env variables failed. %s", err.Error())
+		//klog.Errorf(msg)
 		klog.FlushAndExit(klog.ExitFlushTimeout, exitCodeConfigurationError)
 	}
 }

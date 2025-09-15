@@ -2,7 +2,7 @@ package dns
 
 import (
 	"fmt"
-	"github.com/caarlos0/env/v10"
+	"github.com/caarlos0/env/v11"
 	"github.com/cert-manager/cert-manager/pkg/acme/webhook/apis/acme/v1alpha1"
 	golangsdk "github.com/opentelekomcloud/gophertelekomcloud"
 	"github.com/opentelekomcloud/gophertelekomcloud/openstack"
@@ -144,19 +144,20 @@ func (s *OpenTelekomCloudDnsProviderSolver) getResolvedZone(ch *v1alpha1.Challen
 	}
 
 	if len(allZones) < 1 {
-		return nil, fmt.Errorf("%s failed: found %v while expecting 1 for zone %s", action, len(allZones), ch.ResolvedZone)
+		return nil, fmt.Errorf("found %v while expecting 1 for zone %s", len(allZones), ch.ResolvedZone)
 	}
 
-	minLen := 256
-	r := 0
+	minZoneNameLength := 256
+	zoneIdx := 0
 
 	for idx, zone := range allZones {
-		if len(zone.Name) < minLen {
-			minLen = len(zone.Name)
-			r = idx
+		if len(zone.Name) < minZoneNameLength {
+			minZoneNameLength = len(zone.Name)
+			zoneIdx = idx
 		}
 	}
-	return &allZones[r], nil
+
+	return &allZones[zoneIdx], nil
 }
 
 func (s *OpenTelekomCloudDnsProviderSolver) getTxtRecordSetsByZone(ch *v1alpha1.ChallengeRequest, zone *zones.Zone) ([]recordsets.RecordSet, error) {
