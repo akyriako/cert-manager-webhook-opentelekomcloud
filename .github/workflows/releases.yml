@@ -1,8 +1,12 @@
 name: Release Charts
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
+    paths-ignore:
+      - README.md
+      - .github/workflows/release.yml
 
 jobs:
   chart-release:
