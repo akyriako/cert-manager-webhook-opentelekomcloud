@@ -1,6 +1,18 @@
 apiVersion: v1
 entries:
   cert-manager-webhook-opentelekomcloud:
+  - apiVersion: v2
+    appVersion: v0.1.5
+    created: "2026-03-16T10:04:12.721161474Z"
+    description: ACME DNS01 solver webhook for Open Telekom Cloud DNS
+    digest: 80a4c8e43496be5b51f31782ebe091029368404187fec0db539858e20ccc1fac
+    maintainers:
+    - name: Kyriakos Akriotis
+      url: https://github.com/akyriako
+    name: cert-manager-webhook-opentelekomcloud
+    urls:
+    - https://github.com/akyriako/cert-manager-webhook-opentelekomcloud/releases/download/cert-manager-webhook-opentelekomcloud-0.2.0/cert-manager-webhook-opentelekomcloud-0.2.0.tgz
+    version: 0.2.0
   - apiVersion: v1
     appVersion: v0.1.5
     created: "2025-08-28T07:36:50.063979561Z"
@@ -37,4 +49,4 @@ entries:
     urls:
     - https://github.com/akyriako/cert-manager-webhook-opentelekomcloud/releases/download/cert-manager-webhook-opentelekomcloud-0.1.2/cert-manager-webhook-opentelekomcloud-0.1.2.tgz
     version: 0.1.2
-generated: "2025-08-28T07:36:50.063998296Z"
+generated: "2026-03-16T10:04:12.72118077Z"
