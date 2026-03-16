@@ -15,7 +15,7 @@ certManager:
   serviceAccountName: cert-manager
 
 image:
-  repository: akyriako78/cert-manager-webhook-opentelekomcloud
+  repository: quay.io/akyriako/cert-manager-webhook-opentelekomcloud
   tag: v0.1.5
   pullPolicy: IfNotPresent
 
@@ -23,6 +23,24 @@ replicaCount: 1
 
 nameOverride: ""
 fullnameOverride: ""
+
+podSecurityContext:
+  runAsNonRoot: false
+  seccompProfile:
+    type: RuntimeDefault
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    add:
+      - NET_BIND_SERVICE
+    drop:
+      - ALL
+  privileged: false
+  readOnlyRootFilesystem: true
+  runAsNonRoot: false
+  seccompProfile:
+    type: RuntimeDefault
 
 service:
   type: ClusterIP

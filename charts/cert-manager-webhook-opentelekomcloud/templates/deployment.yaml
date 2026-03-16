@@ -21,6 +21,10 @@ spec:
         release: {{ .Release.Name }}
     spec:
       serviceAccountName: {{ include "cert-manager-webhook-opentelekomcloud.fullname" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+{{ toYaml . | indent 8 }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -54,6 +58,10 @@ spec:
             - name: certs
               mountPath: /tls
               readOnly: true
+          {{- with .Values.containerSecurityContext }}
+          securityContext:
+{{ toYaml . | indent 12 }}
+          {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
       volumes:
