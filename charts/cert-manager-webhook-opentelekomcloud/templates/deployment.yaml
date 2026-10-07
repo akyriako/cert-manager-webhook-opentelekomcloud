@@ -40,6 +40,10 @@ spec:
               value: {{ .Values.groupName | quote }}
             - name: OS_DEBUG
               value: {{ .Values.debug | quote }}
+            {{- with .Values.opentelekomcloud.projectName }}
+            - name: OS_PROJECT_NAME
+              value: {{ . | quote }}
+            {{- end }}
           ports:
             - name: https
               containerPort: 443

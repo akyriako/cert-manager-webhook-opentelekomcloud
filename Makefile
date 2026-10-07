@@ -50,6 +50,7 @@ $(OUT)/rendered-manifest.yaml: $(HELM_FILES) | $(OUT)
         --set image.tag=$(IMAGE_TAG) \
         --set opentelekomcloud.accessKey=$(OS_ACCESS_KEY) \
         --set opentelekomcloud.secretKey=$(OS_SECRET_KEY) \
+        --set opentelekomcloud.projectName=$(OS_PROJECT_NAME) \
         --namespace cert-manager \
         charts/cert-manager-webhook-opentelekomcloud > $@
 

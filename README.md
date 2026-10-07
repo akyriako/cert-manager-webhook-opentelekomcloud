@@ -28,6 +28,8 @@ Configure the Chart by setting the following parameters:
 - `credentialsSecretRef`: a reference to the Kubernetes `Secret` that will hold the OTC access & secret keys, defaults to `cert-manager-webhook-opentelekomcloud-creds`
 - `opentelekomcloud.accessKey`: the access key in plain text, **not required**
 - `opentelekomcloud.secretKey`: the secret key in plain text, **not required**
+- `opentelekomcloud.projectName`: the OTC project name in plain text, **not required**. When set, it is exposed to the
+  webhook as environment variable `OS_PROJECT_NAME`; when empty, the variable is **not** added to the deployment
 
 > [!NOTE]
 > The remaining chart variables are, besides self-explanatory, the same that used already by [cert-manager/webhook-example](https://github.com/cert-manager/webhook-example) 
@@ -139,6 +141,8 @@ spec:
 - `groupName` can be set in the respective chart parameter, otherwise defaults to `acme.opentelekomcloud.com`
 - `solverName` should be `opentelekomcloud`, it is **not configurable**
 - `region`, although configurable and required, it can only be set to `eu-de`
+- `projectName`, optional, the OTC project name to scope the credentials against. **Leave it out of the `config` stanza
+  if you don't need it**, it is only serialized when it has a value
 - `accessKeySecretRef` and `secretKeySecretRef` can be set in chart parameter `credentialsSecretRef`, if not defaults to `cert-manager-webhook-opentelekomcloud-creds`
 
 Deploy the manifest above with `kubectl`.
@@ -267,6 +271,7 @@ type OpenTelekomCloudDnsProviderConfig struct {
 	// These fields will be set by users in the
 	// `issuer.spec.acme.dns01.providers.webhook.config` field.
 	Region             string                    `json:"region,required"`
+	ProjectName        string                    `json:"projectName,omitempty"`
 	AccessKeySecretRef *corev1.SecretKeySelector `json:"accessKeySecretRef,omitempty"`
 	SecretKeySecretRef *corev1.SecretKeySelector `json:"secretKeySecretRef,omitempty"`
 }
