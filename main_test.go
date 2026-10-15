@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/akyriako/cert-manager-webhook-opentelekomcloud/pkg/dns"
 	"os"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+	"strings"
 	"testing"
 
 	acmetest "github.com/cert-manager/cert-manager/test/acme"
@@ -45,4 +47,33 @@ func TestRunsSuite(t *testing.T) {
 	)
 
 	fixture.RunConformance(t)
+}
+
+func TestProjectNameConfiguration(t *testing.T) {
+	cfg := dns.OpenTelekomCloudDnsProviderConfig{}
+	if err := json.Unmarshal([]byte(`{"region":"eu-de"}`), &cfg); err != nil {
+		t.Fatalf("decoding solver config failed: %v", err)
+	}
+
+	if cfg.ProjectName != "" {
+		t.Fatalf("expected projectName to be unset, got %q", cfg.ProjectName)
+	}
+
+	encoded, err := json.Marshal(cfg)
+	if err != nil {
+		t.Fatalf("encoding solver config failed: %v", err)
+	}
+
+	if strings.Contains(string(encoded), "projectName") {
+		t.Fatalf("projectName must not be introduced in the config when not set, got %s", encoded)
+	}
+
+	cfg = dns.OpenTelekomCloudDnsProviderConfig{}
+	if err := json.Unmarshal([]byte(`{"region":"eu-de","projectName":"my-project"}`), &cfg); err != nil {
+		t.Fatalf("decoding solver config failed: %v", err)
+	}
+
+	if cfg.ProjectName != "my-project" {
+		t.Fatalf("expected projectName to be my-project, got %q", cfg.ProjectName)
+	}
 }

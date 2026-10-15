@@ -69,6 +69,10 @@ func (s *OpenTelekomCloudDnsProviderSolver) setOpenTelekomCloudDnsServiceClient(
 		SecretKey:        secret.SecretKey,
 	}
 
+	if config.ProjectName != "" {
+		authOpts.ProjectName = config.ProjectName
+	}
+
 	endpointOpts := golangsdk.EndpointOpts{
 		Region: config.Region,
 	}

@@ -3,7 +3,7 @@ OS ?= $(shell $(GO) env GOOS)
 ARCH ?= $(shell $(GO) env GOARCH)
 
 IMAGE_NAME := quay.io/akyriako/cert-manager-webhook-opentelekomcloud
-IMAGE_TAG  ?= v0.1.5
+IMAGE_TAG  ?= v0.3.0
 
 OUT := $(shell pwd)/_out
 
@@ -50,6 +50,7 @@ $(OUT)/rendered-manifest.yaml: $(HELM_FILES) | $(OUT)
         --set image.tag=$(IMAGE_TAG) \
         --set opentelekomcloud.accessKey=$(OS_ACCESS_KEY) \
         --set opentelekomcloud.secretKey=$(OS_SECRET_KEY) \
+        --set opentelekomcloud.projectName=$(OS_PROJECT_NAME) \
         --namespace cert-manager \
         charts/cert-manager-webhook-opentelekomcloud > $@
 

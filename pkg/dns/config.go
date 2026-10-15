@@ -27,6 +27,7 @@ type OpenTelekomCloudDnsProviderConfig struct {
 	// These fields will be set by users in the
 	// `issuer.spec.acme.dns01.providers.webhook.config` field.
 	Region             string                    `json:"region,required"`
+	ProjectName        string                    `json:"projectName,omitempty"`
 	AccessKeySecretRef *corev1.SecretKeySelector `json:"accessKeySecretRef,omitempty"`
 	SecretKeySecretRef *corev1.SecretKeySelector `json:"secretKeySecretRef,omitempty"`
 }

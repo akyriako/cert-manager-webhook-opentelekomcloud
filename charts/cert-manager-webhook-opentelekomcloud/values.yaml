@@ -67,3 +67,6 @@ affinity: {}
 opentelekomcloud:
   accessKey: ""
   secretKey: ""
+  # Optional, the OTC project name to scope the credentials against.
+  # When empty, OS_PROJECT_NAME is not set on the deployment.
+  projectName: ""
