@@ -3,7 +3,7 @@ OS ?= $(shell $(GO) env GOOS)
 ARCH ?= $(shell $(GO) env GOARCH)
 
 IMAGE_NAME := quay.io/akyriako/cert-manager-webhook-opentelekomcloud
-IMAGE_TAG  ?= v0.1.5
+IMAGE_TAG  ?= v0.3.0
 
 OUT := $(shell pwd)/_out
 
