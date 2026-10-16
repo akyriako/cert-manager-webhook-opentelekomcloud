@@ -16,8 +16,12 @@ certManager:
 
 image:
   repository: quay.io/akyriako/cert-manager-webhook-opentelekomcloud
-  tag: v0.3.2
+  tag: v0.3.1
   pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+  # Optional, reference to an existing secret used to pull the image, e.g.:
+  # - name: my-registry-secret
 
 replicaCount: 1
 
