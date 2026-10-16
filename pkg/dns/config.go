@@ -3,6 +3,9 @@ package dns
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+	"strings"
+
 	corev1 "k8s.io/api/core/v1"
 	extapi "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 )
@@ -53,12 +56,25 @@ type OpenTelekomCloudDnsProviderSecrets struct {
 func loadConfig(cfgJSON *extapi.JSON) (OpenTelekomCloudDnsProviderConfig, error) {
 	cfg := OpenTelekomCloudDnsProviderConfig{}
 	// handle the 'base case' where no configuration has been provided
-	if cfgJSON == nil {
-		return cfg, nil
-	}
-	if err := json.Unmarshal(cfgJSON.Raw, &cfg); err != nil {
-		return cfg, fmt.Errorf("error decoding solver config: %v", err)
+	if cfgJSON != nil {
+		if err := json.Unmarshal(cfgJSON.Raw, &cfg); err != nil {
+			return cfg, fmt.Errorf("error decoding solver config: %v", err)
+		}
 	}
 
+	// Resolve project name: only use OS_PROJECT_NAME if not set in config
+	cfg.ProjectName = ResolveProjectName(cfg)
+
 	return cfg, nil
+}
+
+// ResolveProjectName returns the project name from the config if set,
+// otherwise it falls back to the OS_PROJECT_NAME environment variable
+// when available. Both values are trimmed of surrounding whitespace.
+func ResolveProjectName(config OpenTelekomCloudDnsProviderConfig) string {
+	if config.ProjectName != "" {
+		return strings.TrimSpace(config.ProjectName)
+	}
+
+	return strings.TrimSpace(os.Getenv("OS_PROJECT_NAME"))
 }

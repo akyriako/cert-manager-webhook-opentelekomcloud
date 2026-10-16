@@ -2,8 +2,8 @@ apiVersion: v2
 name: cert-manager-webhook-opentelekomcloud
 description: ACME DNS01 solver webhook for Open Telekom Cloud DNS
 
-version: 0.3.1
-appVersion: "v0.3.1"
+version: 0.3.2
+appVersion: "v0.3.2"
 
 maintainers:
   - name: Kyriakos Akriotis
