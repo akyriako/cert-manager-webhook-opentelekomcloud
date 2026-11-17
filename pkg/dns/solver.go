@@ -146,10 +146,7 @@ func (s *OpenTelekomCloudDnsProviderSolver) CleanUp(ch *v1alpha1.ChallengeReques
 // where a SIGTERM or similar signal is sent to the webhook process.
 func (s *OpenTelekomCloudDnsProviderSolver) Initialize(kubeClientConfig *rest.Config, stopCh <-chan struct{}) error {
 	klog.V(verbosity).Info(fmt.Sprintf("initializing cert-manager-webhook-%s", solverReferenceName))
-	initializeErr := fmt.Errorf(fmt.Sprintf(
-		"initializing cert-manager-webhook-%s failed",
-		solverReferenceName,
-	))
+	initializeErr := fmt.Errorf("initializing cert-manager-webhook-%s failed", solverReferenceName)
 
 	select {
 	case <-s.context.Done():

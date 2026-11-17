@@ -77,3 +77,29 @@ func TestProjectNameConfiguration(t *testing.T) {
 		t.Fatalf("expected projectName to be my-project, got %q", cfg.ProjectName)
 	}
 }
+
+func TestResolveProjectName(t *testing.T) {
+	tests := []struct {
+		name       string
+		configName string
+		envName    string
+		want       string
+	}{
+		{name: "config wins over env", configName: "eu-de_fromconfig", envName: "eu-de_fromenv", want: "eu-de_fromconfig"},
+		{name: "falls back to env", configName: "", envName: "eu-de_fromenv", want: "eu-de_fromenv"},
+		{name: "both empty", configName: "", envName: "", want: ""},
+		{name: "env is trimmed", configName: "", envName: "  eu-de_fromenv  ", want: "eu-de_fromenv"},
+		{name: "config is trimmed", configName: "eu-de_fromconfig", envName: "  ", want: "eu-de_fromconfig"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Setenv("OS_PROJECT_NAME", tt.envName)
+
+			got := dns.ResolveProjectName(dns.OpenTelekomCloudDnsProviderConfig{ProjectName: tt.configName})
+			if got != tt.want {
+				t.Fatalf("ResolveProjectName() = %q, want %q", got, tt.want)
+			}
+		})
+	}
+}
